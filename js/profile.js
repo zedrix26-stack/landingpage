@@ -3,8 +3,9 @@
 
   var S = window.TapXStorage;
   var root = document.getElementById('profile-root');
-  var current = null;          
+  var current = null;         
   var currentUrl = '';         
+
 
   function node(tag, className, text) {
     var n = document.createElement(tag);
@@ -24,6 +25,7 @@
     while (el && el.firstChild) el.removeChild(el.firstChild);
   }
 
+
   function showError(title, message, actions) {
     clear(root);
     var box = node('div', 'error-screen');
@@ -32,6 +34,7 @@
     box.appendChild(node('p', '', message));
 
     (actions || []).forEach(function (action) {
+      /* hosted builds have no dashboard — never show dead admin links */
       if (isHosted() && /(^|\/)(dashboard|index)\.html/.test(action.href)) return;
       var a = document.createElement('a');
       a.className = 'btn btn--primary';
@@ -44,7 +47,7 @@
     document.title = title + ' — TapX';
   }
 
-
+  /** True when served from a real website (not file:// or localhost). */
   function isHosted() {
     var proto = window.location.protocol;
     if (proto !== 'http:' && proto !== 'https:') return false;
@@ -53,10 +56,13 @@
            host !== '::1' && host !== '[::1]';
   }
 
+
   function readUsername() {
     var params = new URLSearchParams(window.location.search);
     var fromQuery = (params.get('user') || '').trim();
     if (fromQuery) return fromQuery;
+    /* pretty path form: https://site.com/p/zedrix or /zedrix — but never
+       a file name like profile.html (the dot rule rejects it) */
     var segments = window.location.pathname.split('/').filter(Boolean);
     var last = segments.length ? segments[segments.length - 1] : '';
     try { last = decodeURIComponent(last); } catch (e) { /* keep raw */ }
@@ -66,6 +72,7 @@
     return '';
   }
 
+  /** NFC + QR destination: the pretty/public form of this profile URL. */
   function canonicalUrl(username) {
     if (new URLSearchParams(window.location.search).get('user')) {
       return TapX.tapUrl(username);
@@ -107,18 +114,24 @@
           '" on this device yet. If you just created it, add it from the ' +
           'dashboard — prototype data is stored locally in your browser.',
       [
-        { href: 'profile.html?user=juan', label: 'Open demo profile' },
+        { href: TapX.tapUrl('zed'), label: 'Open demo profile' },
         { href: 'dashboard.html', label: 'Create this profile' }
       ]);
   }
 
+  /**
+   * Cloud rows cross the network, so they get the same coercion the
+   * local storage fence applies (short strings, safe image, real URLs).
+   * Database columns are lowercase (fullname, cardstatus, …) — they are
+   * mapped back to the camelCase fields the renderer expects.
+   */
   function sanitizeCloudRow(row) {
     var out = {};
     var TEXT = [
       ['username', 'username'], ['fullName', 'fullname'],
       ['title', 'title'], ['bio', 'bio'],
       ['profileImage', 'profileimage'], ['school', 'school'],
-      ['program', 'program'], ['yearLevel', 'yearlevel'],
+      ['course', 'course'], ['yearLevel', 'yearlevel'],
       ['email', 'email'], ['phone', 'phone'], ['location', 'location'],
       ['instagram', 'instagram'], ['facebook', 'facebook'],
       ['tiktok', 'tiktok'], ['messenger', 'messenger'],
@@ -164,7 +177,7 @@
     if (!username) {
       showError('No profile selected',
         'This link is missing a username. Try the demo profile instead.',
-        [{ href: 'profile.html?user=juan', label: 'Open demo profile' }]);
+        [{ href: TapX.tapUrl('zed'), label: 'Open demo profile' }]);
       return;
     }
 
@@ -176,6 +189,8 @@
       return;
     }
 
+    /* cloud first (database is the source of truth once synced),
+       local storage as fallback — never reject on network errors */
     var cloud = window.TapXCloud;
     if (cloud && cloud.isReady()) {
       cloud.fetchProfile(username).then(function (res) {
@@ -196,6 +211,7 @@
     notFoundFallback(username, false);
   }
 
+  /** Counts a view once per browser session (avoids refresh spam). */
   function countView(username) {
     var flag = 'tapx_counted_' + username.toLowerCase();
     try {
@@ -326,19 +342,19 @@
     }
 
     /* ---------- school information ---------- */
-    if (p.school || p.program || p.yearLevel) {
+    if (p.school || p.course || p.yearLevel) {
       var infoSection = node('section', 'p-section');
       infoSection.appendChild(sectionTitle('fa-solid fa-graduation-cap', 'Education'));
       var dl = node('dl', 'info-grid');
       addInfoRow(dl, 'School', p.school);
-      addInfoRow(dl, 'Program', p.program);
+      addInfoRow(dl, 'Course', p.course);
       addInfoRow(dl, 'Year Level', p.yearLevel);
       infoSection.appendChild(dl);
       root.appendChild(infoSection);
     }
   }
 
-
+  /* ---------- render helpers ---------- */
   function makeBadge(faClass, text, extraClass) {
     var b = node('span', extraClass || 'badge');
     b.appendChild(icon(faClass));
@@ -424,6 +440,7 @@
     return v;
   }
 
+
   function shareProfile() {
     var data = {
       title: current.fullName + ' — TapX',
@@ -435,9 +452,11 @@
       navigator.share(data).catch(function () { /* user cancelled */ });
       return;
     }
+    /* fallback: copy link */
     TapX.copy(currentUrl, 'Profile link copied');
   }
 
+  /** Generates and downloads a standard vCard 3.0 contact file. */
   function saveContact() {
     var p = current;
     var lines = [
