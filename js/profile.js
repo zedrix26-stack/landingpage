@@ -1,26 +1,11 @@
-/**
- * TapX — profile.js
- * ------------------------------------------------------------------
- * Renders the public digital profile page (profile.html?user=juan).
- *
- * Safety notes:
- *  - Every value coming from localStorage is written with textContent
- *    or escapeHtml() — never raw innerHTML.
- *  - External links open in a new tab with rel="noopener noreferrer".
- *  - Friendly error screens replace blank pages for missing/invalid users.
- * ------------------------------------------------------------------
- */
 (function () {
   'use strict';
 
   var S = window.TapXStorage;
   var root = document.getElementById('profile-root');
-  var current = null;          // profile currently rendered
-  var currentUrl = '';         // canonical profile URL (NFC + QR destination)
+  var current = null;          
+  var currentUrl = '';         
 
-  /* ================================================================
-     SMALL DOM HELPERS (local copies keep this file self-contained)
-     ================================================================ */
   function node(tag, className, text) {
     var n = document.createElement(tag);
     if (className) n.className = className;
@@ -39,9 +24,6 @@
     while (el && el.firstChild) el.removeChild(el.firstChild);
   }
 
-  /* ================================================================
-     ERROR SCREEN — never leave a blank page
-     ================================================================ */
   function showError(title, message, actions) {
     clear(root);
     var box = node('div', 'error-screen');
@@ -50,7 +32,6 @@
     box.appendChild(node('p', '', message));
 
     (actions || []).forEach(function (action) {
-      /* hosted builds have no dashboard — never show dead admin links */
       if (isHosted() && /(^|\/)(dashboard|index)\.html/.test(action.href)) return;
       var a = document.createElement('a');
       a.className = 'btn btn--primary';
@@ -63,7 +44,7 @@
     document.title = title + ' — TapX';
   }
 
-  /** True when served from a real website (not file:// or localhost). */
+
   function isHosted() {
     var proto = window.location.protocol;
     if (proto !== 'http:' && proto !== 'https:') return false;
@@ -72,15 +53,10 @@
            host !== '::1' && host !== '[::1]';
   }
 
-  /* ================================================================
-     URL + PROFILE LOADING
-     ================================================================ */
   function readUsername() {
     var params = new URLSearchParams(window.location.search);
     var fromQuery = (params.get('user') || '').trim();
     if (fromQuery) return fromQuery;
-    /* pretty path form: https://site.com/p/zedrix or /zedrix — but never
-       a file name like profile.html (the dot rule rejects it) */
     var segments = window.location.pathname.split('/').filter(Boolean);
     var last = segments.length ? segments[segments.length - 1] : '';
     try { last = decodeURIComponent(last); } catch (e) { /* keep raw */ }
@@ -90,7 +66,6 @@
     return '';
   }
 
-  /** NFC + QR destination: the pretty/public form of this profile URL. */
   function canonicalUrl(username) {
     if (new URLSearchParams(window.location.search).get('user')) {
       return TapX.tapUrl(username);
@@ -137,12 +112,6 @@
       ]);
   }
 
-  /**
-   * Cloud rows cross the network, so they get the same coercion the
-   * local storage fence applies (short strings, safe image, real URLs).
-   * Database columns are lowercase (fullname, cardstatus, …) — they are
-   * mapped back to the camelCase fields the renderer expects.
-   */
   function sanitizeCloudRow(row) {
     var out = {};
     var TEXT = [
@@ -207,8 +176,6 @@
       return;
     }
 
-    /* cloud first (database is the source of truth once synced),
-       local storage as fallback — never reject on network errors */
     var cloud = window.TapXCloud;
     if (cloud && cloud.isReady()) {
       cloud.fetchProfile(username).then(function (res) {
@@ -229,7 +196,6 @@
     notFoundFallback(username, false);
   }
 
-  /** Counts a view once per browser session (avoids refresh spam). */
   function countView(username) {
     var flag = 'tapx_counted_' + username.toLowerCase();
     try {
@@ -239,9 +205,7 @@
     try { S.recordView(username); } catch (e) {}
   }
 
-  /* ================================================================
-     RENDER
-     ================================================================ */
+
   function render(p) {
     clear(root);
     document.title = p.fullName + ' (@' + p.username + ') — TapX';
@@ -374,7 +338,7 @@
     }
   }
 
-  /* ---------- render helpers ---------- */
+
   function makeBadge(faClass, text, extraClass) {
     var b = node('span', extraClass || 'badge');
     b.appendChild(icon(faClass));
@@ -460,9 +424,6 @@
     return v;
   }
 
-  /* ================================================================
-     SHARE / CONTACT
-     ================================================================ */
   function shareProfile() {
     var data = {
       title: current.fullName + ' — TapX',
@@ -474,11 +435,9 @@
       navigator.share(data).catch(function () { /* user cancelled */ });
       return;
     }
-    /* fallback: copy link */
     TapX.copy(currentUrl, 'Profile link copied');
   }
 
-  /** Generates and downloads a standard vCard 3.0 contact file. */
   function saveContact() {
     var p = current;
     var lines = [
@@ -518,9 +477,7 @@
       .replace(/([,;\\])/g, '\\$1');
   }
 
-  /* ================================================================
-     BOOT
-     ================================================================ */
+
   function init() {
     var year = document.getElementById('footer-year');
     if (year) year.textContent = String(new Date().getFullYear());
