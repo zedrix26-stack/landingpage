@@ -1,13 +1,3 @@
-/* ==================================================================
-   TapX — style.css
-   Shared design system: tokens, base, header, buttons, forms,
-   card mockup, toast, footer.
-   Mobile-first. Single dark theme pinned via data-theme="dark" on <html>.
-   ================================================================== */
-
-/* ------------------------------------------------------------------
-   1. DESIGN TOKENS
-   ------------------------------------------------------------------ */
 :root {
   /* brand */
   --accent-1: #4f6bff;
@@ -59,9 +49,6 @@
   --shadow-lg: 0 30px 70px rgba(0, 0, 0, .55);
 }
 
-/* ------------------------------------------------------------------
-   2. RESET / BASE
-   ------------------------------------------------------------------ */
 *, *::before, *::after { box-sizing: border-box; }
 
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
@@ -119,9 +106,7 @@ p { margin: 0 0 1em; }
 }
 .skip-link:focus { top: 12px; }
 
-/* ------------------------------------------------------------------
-   3. BUTTONS
-   ------------------------------------------------------------------ */
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -172,9 +157,6 @@ p { margin: 0 0 1em; }
 .btn--sm { min-height: 48px; padding: 10px 18px; font-size: 14px; }
 .btn--block { width: 100%; }
 
-/* ------------------------------------------------------------------
-   4. HEADER
-   ------------------------------------------------------------------ */
 .site-header {
   position: sticky; top: 0; z-index: 100;
   height: var(--header-h);
@@ -252,9 +234,7 @@ body.nav-open { overflow: hidden; }
   .mobile-nav { display: none !important; }
 }
 
-/* ------------------------------------------------------------------
-   5. HERO
-   ------------------------------------------------------------------ */
+
 .hero {
   position: relative; overflow: hidden;
   padding: 64px 0 72px;
@@ -318,12 +298,6 @@ body.nav-open { overflow: hidden; }
   .hero .container { grid-template-columns: 1.05fr .95fr; }
 }
 
-/* ------------------------------------------------------------------
-   6. PVC CARD MOCKUP (CR80 ratio 85.6 : 53.98 ≈ 1.586)
-   Shared by the home page, dashboard and card designer.
-   Typography scales with the card width using container queries (cqw),
-   so the same markup renders correctly on screen and in print (85.6mm).
-   ------------------------------------------------------------------ */
 .card-stage {
   position: relative;
   display: grid; place-items: center;
@@ -487,9 +461,7 @@ body.nav-open { overflow: hidden; }
   display: flex; align-items: center; gap: 8px; justify-content: center;
 }
 
-/* ------------------------------------------------------------------
-   7. SECTIONS
-   ------------------------------------------------------------------ */
+
 .section { padding: 72px 0; }
 .section--alt { background: var(--bg-elevated); border-block: 1px solid var(--border); }
 
@@ -577,9 +549,7 @@ body.nav-open { overflow: hidden; }
 .cta .btn--ghost:hover { background: rgba(255, 255, 255, .24); }
 .cta .btn--white { background: #fff; color: #3d4bd6; box-shadow: 0 10px 26px rgba(0,0,0,.2); }
 
-/* ------------------------------------------------------------------
-   8. FOOTER
-   ------------------------------------------------------------------ */
+
 .site-footer {
   background: var(--bg-elevated);
   border-top: 1px solid var(--border);
@@ -603,9 +573,7 @@ body.nav-open { overflow: hidden; }
   justify-content: space-between; font-size: 13px; color: var(--text-faint);
 }
 
-/* ------------------------------------------------------------------
-   9. FORMS
-   ------------------------------------------------------------------ */
+
 .form-grid { display: grid; gap: 18px; }
 @media (min-width: 640px) { .form-grid--2 { grid-template-columns: 1fr 1fr; } }
 
@@ -701,9 +669,7 @@ body.nav-open { overflow: hidden; }
   text-shadow: 0 1px 3px rgba(0, 0, 0, .5);
 }
 
-/* ------------------------------------------------------------------
-   10. TOAST
-   ------------------------------------------------------------------ */
+
 .toast {
   background: var(--text); color: var(--bg);
   padding: 12px 18px; border-radius: var(--radius-pill);
@@ -718,9 +684,7 @@ body.nav-open { overflow: hidden; }
 .toast--error   { background: #c93a3f; color: #fff; }
 .toast--warn    { background: #a5670a; color: #fff; }
 
-/* ------------------------------------------------------------------
-   11. SHARED SMALL UTILITIES
-   ------------------------------------------------------------------ */
+
 .badge {
   display: inline-flex; align-items: center; gap: 6px;
   font-size: 12px; font-weight: 600; letter-spacing: .04em;
@@ -786,9 +750,7 @@ body.nav-open { overflow: hidden; }
 .empty i { font-size: 34px; color: var(--text-faint); margin-bottom: 12px; }
 .empty h3 { font-size: 18px; color: var(--text); }
 
-/* ------------------------------------------------------------------
-   6b. CARD THEMES + ACCENT (used by the card designer & print)
-   ------------------------------------------------------------------ */
+
 .pvc-card { --card-accent: #5b6cff; }
 .pvc-card__brand .accent { color: var(--card-accent); }
 
@@ -823,12 +785,7 @@ body.nav-open { overflow: hidden; }
   background: linear-gradient(215deg, #4739d6 0%, #241a6b 55%, #120c3c 100%);
 }
 
-/* ------------------------------------------------------------------
-   6c. DESIGN GUIDES (screen only — hidden automatically when printing)
-   .card-guide--safe : 3mm keep-out from the physical card edge
-   .card-guide--nfc  : typical NFC antenna / inlay area — keep free of
-                       metallic foil, ink or decoration.
-   ------------------------------------------------------------------ */
+
 .card-guide {
   position: absolute; inset: 0;
   pointer-events: none; z-index: 6;
