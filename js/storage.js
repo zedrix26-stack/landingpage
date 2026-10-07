@@ -5,12 +5,10 @@
     profiles: 'tapx_profiles',
     views: 'tapx_views',
     settings: 'tapx_settings',
-    seeded: 'tapx_seeded_v1',
-    removed: 'tapx_removed'       /* usernames the user deleted for good */
+    removed: 'tapx_removed'      
   };
 
-  /* In-memory mirror. If localStorage is blocked (private mode, iframe
-     sandbox...) the app still works for the current session. */
+
   var memory = {};
 
   function storageAvailable() {
@@ -26,15 +24,11 @@
 
   var HAS_LS = storageAvailable();
 
-  /* ---------- one-time migration from the old tapid_* keys ----------
-     Earlier builds stored everything under "tapid_*". The keys are now
-     "tapx_*" (brand rename). Copy old data over so nothing the user
-     already saved is lost, then delete the legacy keys. */
+
   var LEGACY_KEYS = {
     tapid_profiles: 'tapx_profiles',
     tapid_views: 'tapx_views',
     tapid_settings: 'tapx_settings',
-    tapid_seeded_v1: 'tapx_seeded_v1',
     tapid_card_design: 'tapx_card_design'
   };
 
@@ -55,10 +49,7 @@
   }
   migrateLegacyKeys();
 
-  /* ---------- cleanup of stale demo leftovers ----------
-     The demo profile "zedrix" is now an official seeded demo account
-     (see seedDemo), so it is kept. Only fix settings that point at a
-     profile which no longer exists. */
+
   function fixBrokenActiveProfile() {
     if (!HAS_LS) return;
     try {
@@ -66,7 +57,8 @@
       if (sraw) {
         var st = JSON.parse(sraw);
         if (st && st.activeProfile && !profileExists(st.activeProfile)) {
-          st.activeProfile = 'juan';
+          var all = getAllProfiles();
+          st.activeProfile = all.length ? all[0].username : '';
           window.localStorage.setItem(KEYS.settings, JSON.stringify(st));
         }
       }
@@ -99,8 +91,7 @@
       window.localStorage.setItem(key, serialized);
       return true;
     } catch (e) {
-      /* quota exceeded or storage disabled — fall back to memory so the
-         current session keeps working, and report the problem. */
+
       memory[key] = serialized;
       return false;
     }
@@ -365,104 +356,6 @@
     return next;
   }
 
-    function seedDemo() {
-    var demoProfiles = [
-      {
-
-        username: 'zedrix',
-        fullName: 'Zedrix Reyes',
-        title: 'BSIT Student · TapX Demo',
-        bio: 'Demo TapX profile. One tap on the NFC card opens this page.',
-        profileImage: 'assets/default-avatar.png',
-        school: 'Northfield Institute of Technology',
-        course: 'Bachelor of Science in Information Technology',
-        yearLevel: '3rd Year',
-        email: 'zedrix@example.com',
-        phone: '+63 900 111 2222',
-        location: 'Manila, Philippines',
-        instagram: 'zedrix',
-        facebook: 'zedrix.reyes',
-        tiktok: '@zedrix',
-        messenger: 'zedrix.reyes',
-        linkedin: 'zedrix-reyes',
-        website: 'https://example.com/zedrix',
-        cardStatus: 'issued'
-      },
-      {
-        username: 'juan',
-        fullName: 'Juan Delacruz',
-        title: 'BSIT Student',
-        bio: 'Student developer interested in programming and technology.',
-        profileImage: 'assets/default-avatar.png',
-        school: 'Northfield Institute of Technology',
-        course: 'Bachelor of Science in Information Technology',
-        yearLevel: '3rd Year',
-        email: 'juan@example.com',
-        phone: '+63 900 000 0000',
-        location: 'Manila, Philippines',
-        instagram: 'juan.delacruz',
-        facebook: 'juan.delacruz',
-        tiktok: '@juan.delacruz',
-        messenger: 'juan.delacruz',
-        linkedin: 'juan-delacruz',
-        website: 'https://example.com',
-        portfolio: 'https://example.com/portfolio',
-        cardStatus: 'draft'
-      },
-      {
-        username: 'maria_santos',
-        fullName: 'Maria Santos',
-        title: 'Content Creator',
-        bio: 'Lifestyle creator sharing food, travel and daily vlogs.',
-        profileImage: 'assets/default-avatar.png',
-        school: 'San Ildefonso College',
-        course: 'Communication Arts',
-        yearLevel: 'Graduate',
-        email: 'maria@example.com',
-        phone: '+63 901 000 0000',
-        location: 'Cebu, Philippines',
-        instagram: 'maria.santos',
-        facebook: 'maria.santos',
-        tiktok: '@maria.santos',
-        messenger: 'maria.santos',
-        linkedin: 'maria-santos',
-        website: 'https://example.com/maria',
-        cardStatus: 'issued'
-      },
-      {
-        username: 'karl_mercado',
-        fullName: 'Karl Mercado',
-        title: 'Freelance Photographer',
-        bio: 'Event and portrait photographer available for bookings.',
-        profileImage: 'assets/default-avatar.png',
-        school: 'Baguio Creative Academy',
-        course: 'Fine Arts',
-        yearLevel: 'Graduate',
-        email: 'karl@example.com',
-        phone: '+63 902 000 0000',
-        location: 'Baguio, Philippines',
-        instagram: 'karl.shoots',
-        facebook: 'karl.mercado',
-        tiktok: '@karl.shoots',
-        messenger: 'karl.mercado',
-        linkedin: 'karl-mercado',
-        website: 'https://example.com/karl',
-        cardStatus: 'printed'
-      }
-    ];
-
-    demoProfiles.forEach(function (profile) {
-
-      if (isRemoved(profile.username)) return;
-      if (!profileExists(profile.username)) {
-        saveProfile(profile, { allowExisting: true });
-      }
-    });
-
-    if (HAS_LS) window.localStorage.setItem(KEYS.seeded, '1');
-    return getProfile('juan');
-  }
-
   window.TapXStorage = {
     isPersistent: HAS_LS,
     validateProfile: validateProfile,
@@ -479,7 +372,6 @@
     getViews: getViews,
     getSettings: getSettings,
     saveSettings: saveSettings,
-    seedDemo: seedDemo,
     USERNAME_RE: USERNAME_RE
   };
 })();
