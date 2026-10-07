@@ -139,7 +139,7 @@
     clear(container);
 
     if (typeof window.QRCode !== 'function') {
-      /* CDN blocked / offline — show a friendly, still-useful fallback. */
+     
       var fallback = el('div', 'qr-fallback');
       fallback.appendChild(el('p', 'qr-fallback__msg',
         'QR library could not load (offline?). Your profile URL is:'));
@@ -152,7 +152,7 @@
 
     try {
       size = size || 240;
-      /* eslint-disable no-new */
+      
       new window.QRCode(container, {
         text: text,
         width: size,
@@ -213,12 +213,12 @@
 
 
   function initChrome() {
-    /* dynamic copyright year */
+    
     document.querySelectorAll('[data-year]').forEach(function (node) {
       setText(node, String(new Date().getFullYear()));
     });
 
-    /* mobile navigation drawer */
+    
     var burger = document.querySelector('[data-nav-toggle]');
     var drawer = document.getElementById('mobile-nav');
     if (burger && drawer) {
@@ -265,11 +265,11 @@
   function boot() {
     TapX.initTheme();
     initChrome();
-    /* Make sure the demo profile exists before any page reads data. */
+    
     if (window.TapXStorage) {
       try { window.TapXStorage.seedDemo(); } catch (e) {}
     }
-    /* Let each page run its own init after the shared chrome is ready. */
+    
     document.dispatchEvent(new CustomEvent('tapx:ready'));
   }
 
