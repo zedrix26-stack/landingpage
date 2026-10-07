@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Card Designer — TapX</title>
+  <meta name="description" content="Preview and print an NFC PVC card at exact CR80 size (85.60 × 53.98 mm).">
+  <meta name="theme-color" content="#0a0c14">
+  <link rel="icon" type="image/jpeg" href="assets/3.jpg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/print.css">
+</head>
+
+<!-- print side selection: print-front | print-back | print-both -->
+<body class="print-both">
+
+<a class="skip-link" href="#designer">Skip to designer</a>
+
+<!-- ============================ HEADER ============================ -->
+<header class="site-header no-print">
+  <div class="container">
+    <a class="brand" href="index.html" aria-label="TapX home">
+      <span class="brand__mark"><img src="assets/2.png" alt="TapX"></span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="setup.html">NFC setup</a>
+      <a href="profile.html?user=juan">Demo profile</a>
+    </nav>
+    <div class="header-actions">
+      <a class="btn btn--primary btn--sm" href="dashboard.html">Dashboard</a>
+    </div>
+  </div>
+</header>
+
+<main class="designer" id="designer">
+
+  <div class="designer__head no-print" style="margin-bottom:20px;">
+    <p class="section__kicker">CR80 · 85.60 × 53.98 mm</p>
+    <h1 style="font-size:clamp(1.5rem,4vw,2.1rem);">NFC PVC Card Designer</h1>
+    <p style="color:var(--text-soft);max-width:640px;">
+      Preview both sides of your card live, then print at exact size.
+      The design prints onto PVC — the URL is written separately to the
+      NFC chip with an NFC writing app.</p>
+  </div>
+
+  <div class="designer-grid">
+
+    <!-- ---------------------- CONTROLS ---------------------- -->
+    <aside class="box controls no-print" aria-label="Card design controls">
+      <div class="box__head"><div><h3>Design</h3><p>Changes update live.</p></div></div>
+
+      <div class="form-section-title">Text</div>
+      <div class="field">
+        <label for="cd-name-input">Name</label>
+        <input class="input" id="cd-name-input" type="text" maxlength="30" placeholder="JUAN DELACRUZ">
+      </div>
+      <div class="field" style="margin-top:14px;">
+        <label for="cd-title-input">Title / course</label>
+        <input class="input" id="cd-title-input" type="text" maxlength="34" placeholder="BSIT STUDENT">
+      </div>
+      <div class="field" style="margin-top:14px;">
+        <label for="cd-school-input">School</label>
+        <input class="input" id="cd-school-input" type="text" maxlength="44" placeholder="Northfield Institute of Technology">
+      </div>
+      <div class="field" style="margin-top:14px;">
+        <label for="cd-course-input">Course (shown with school)</label>
+        <input class="input" id="cd-course-input" type="text" maxlength="40" placeholder="BS Information Technology">
+      </div>
+
+      <div class="form-section-title">Theme</div>
+      <div class="swatches" role="group" aria-label="Card theme">
+        <button class="swatch" type="button" data-theme-card="midnight"
+                style="background:linear-gradient(145deg,#2b3350,#0b0d17);"
+                aria-label="Midnight theme" aria-pressed="true"></button>
+        <button class="swatch" type="button" data-theme-card="snow"
+                style="background:linear-gradient(145deg,#ffffff,#e7ebf5);"
+                aria-label="Snow theme" aria-pressed="false"></button>
+        <button class="swatch" type="button" data-theme-card="graphite"
+                style="background:linear-gradient(145deg,#343a4d,#171a24);"
+                aria-label="Graphite theme" aria-pressed="false"></button>
+        <button class="swatch" type="button" data-theme-card="royal"
+                style="background:linear-gradient(145deg,#4739d6,#120c3c);"
+                aria-label="Royal theme" aria-pressed="false"></button>
+      </div>
+
+      <div class="form-section-title">Accent</div>
+      <div class="swatches" role="group" aria-label="Card accent colour">
+        <button class="swatch" type="button" data-accent="#5b6cff" style="background:#5b6cff;" aria-label="Blue accent" aria-pressed="true"></button>
+        <button class="swatch" type="button" data-accent="#8b5cf6" style="background:#8b5cf6;" aria-label="Violet accent" aria-pressed="false"></button>
+        <button class="swatch" type="button" data-accent="#12b981" style="background:#12b981;" aria-label="Green accent" aria-pressed="false"></button>
+        <button class="swatch" type="button" data-accent="#f59e0b" style="background:#f59e0b;" aria-label="Amber accent" aria-pressed="false"></button>
+        <button class="swatch" type="button" data-accent="#ef476f" style="background:#ef476f;" aria-label="Rose accent" aria-pressed="false"></button>
+      </div>
+
+      <div class="form-section-title">Elements</div>
+      <label class="switch"><input type="checkbox" id="opt-school" checked>
+        <span class="switch__track" aria-hidden="true"></span> Show school</label>
+      <label class="switch"><input type="checkbox" id="opt-qr" checked>
+        <span class="switch__track" aria-hidden="true"></span> Show QR code (small)</label>
+      <label class="switch"><input type="checkbox" id="opt-social" checked>
+        <span class="switch__track" aria-hidden="true"></span> Show social icons</label>
+      <label class="switch"><input type="checkbox" id="opt-guides" checked>
+        <span class="switch__track" aria-hidden="true"></span> Show safe-area &amp; NFC guides</label>
+
+      <div class="notice notice--info" style="margin-top:16px;">
+        <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+        <span>Guides are screen-only and are never printed.</span>
+      </div>
+    </aside>
+
+    <!-- ---------------------- PREVIEW / PRINT ---------------------- -->
+    <section aria-label="Card preview">
+      <div class="print-stage">
+
+        <!-- FRONT -->
+        <div class="print-page" data-side="front">
+          <article class="pvc-card designer-card print-card" id="card-front"
+                   aria-label="Card front preview">
+            <div class="pvc-card__front">
+              <div class="pvc-card__brand">
+                <span>TAP<span class="accent">X</span></span>
+                <span class="nfc-ic"><i class="fa-solid fa-nfc-symbol" aria-hidden="true"></i> NFC</span>
+              </div>
+
+              <div class="pvc-card__body">
+                <div>
+                  <p class="pvc-card__name" id="card-front-name">JUAN DELACRUZ</p>
+                  <p class="pvc-card__title" id="card-front-title">BSIT STUDENT</p>
+                  <p class="pvc-card__school" id="card-front-school">Northfield Institute of Technology</p>
+                </div>
+              </div>
+
+              <div class="pvc-card__foot">
+                <span class="pulse">TAP TO CONNECT</span>
+                <span>NFC</span>
+              </div>
+            </div>
+
+            <!-- screen-only guides -->
+            <div class="card-guide card-guide--safe" data-guide>
+              <span class="card-guide__tag">3 mm safe area</span>
+            </div>
+            <div class="card-guide card-guide--nfc" data-guide>
+              <span class="card-guide__tag">NFC antenna — no metal/foil</span>
+            </div>
+          </article>
+          <span class="card-caption no-print">Front</span>
+        </div>
+
+        <!-- BACK -->
+        <div class="print-page" data-side="back">
+          <article class="pvc-card designer-card print-card" id="card-back"
+                   aria-label="Card back preview">
+            <div class="pvc-card__back" style="display:flex;">
+              <div class="pvc-card__qr" id="card-qr" role="img"
+                   aria-label="QR code linking to the profile"></div>
+              <div class="pvc-card__socials" id="card-back-socials">
+                <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+                <i class="fa-brands fa-tiktok" aria-hidden="true"></i>
+                <i class="fa-brands fa-facebook" aria-hidden="true"></i>
+                <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+              </div>
+              <p class="pvc-card__foot" style="letter-spacing:.14em;">
+                <span>TAP TO CONNECT</span>
+              </p>
+            </div>
+
+            <div class="card-guide card-guide--safe" data-guide>
+              <span class="card-guide__tag">3 mm safe area</span>
+            </div>
+          </article>
+          <span class="card-caption no-print">Back</span>
+        </div>
+
+      </div>
+
+      <!-- ---------------------- TOOLBAR ---------------------- -->
+      <div class="toolbar no-print">
+        <button class="btn btn--primary" type="button" id="btn-print-front">
+          <i class="fa-solid fa-print" aria-hidden="true"></i> Print Front</button>
+        <button class="btn btn--soft" type="button" id="btn-print-back">
+          <i class="fa-solid fa-print" aria-hidden="true"></i> Print Back</button>
+        <button class="btn btn--soft" type="button" id="btn-print-both">
+          <i class="fa-solid fa-print" aria-hidden="true"></i> Print Both</button>
+        <button class="btn btn--ghost" type="button" id="btn-qr-download">
+          <i class="fa-solid fa-download" aria-hidden="true"></i> Download QR</button>
+        <button class="btn btn--ghost" type="button" id="btn-copy-url">
+          <i class="fa-regular fa-copy" aria-hidden="true"></i> Copy NFC URL</button>
+        <button class="btn btn--ghost" type="button" id="btn-save">
+          <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> Save design</button>
+      </div>
+
+      <!-- ---------------------- PRODUCTION NOTES ---------------------- -->
+      <div class="print-notes no-print">
+        <div class="notice">
+          <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+          <span><strong>For professional production, use a PVC card printer or
+            a professional card printing service.</strong> Desktop printers on
+            paper will not match PVC card stock, and cut size matters for
+            wallets and card holders.</span>
+        </div>
+
+        <div class="notice notice--info">
+          <i class="fa-solid fa-nfc-symbol" aria-hidden="true"></i>
+          <span><strong>Keep the NFC antenna area clear.</strong> The red dashed
+            zone shows where a typical NFC inlay sits. Do not place metallic
+            foil, glitter, metallic ink or metal elements over it — metal
+            detunes the antenna and the card will not tap.</span>
+        </div>
+
+        <div class="box" id="production">
+          <div class="box__head"><div><h3>Production guide</h3>
+            <p>What to order and how the pieces fit together.</p></div></div>
+          <div class="info-grid" style="box-shadow:none;">
+            <div class="info-row"><dt>Card</dt><dd>PVC CR80 (credit-card size)</dd></div>
+            <div class="info-row"><dt>Dimensions</dt><dd>85.60 × 53.98 mm</dd></div>
+            <div class="info-row"><dt>Corner radius</dt><dd>3.18 mm</dd></div>
+            <div class="info-row"><dt>Recommended chip</dt><dd>NTAG213 · NTAG215 · NTAG216</dd></div>
+            <div class="info-row"><dt>Chip form</dt><dd>NFC inlay embedded inside the PVC card</dd></div>
+            <div class="info-row"><dt>What the website provides</dt><dd>Your TapX profile URL (and this print file)</dd></div>
+            <div class="info-row"><dt>What the NFC app provides</dt><dd>Writes that URL onto the chip</dd></div>
+          </div>
+          <div class="notice" style="margin-top:16px;">
+            <i class="fa-solid fa-lock" aria-hidden="true"></i>
+            <span>Do not store private data directly on the NFC tag. Anyone
+              nearby can read it — always store only your TapX URL.</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer no-print">
+  <div class="container">
+    <div class="footer-note" style="margin:0;padding:0;border:none;">
+      <span>© <span data-year>2026</span> TapX — card designer</span>
+      <span>Website designs · NFC app writes the URL · Printer prints the PVC.</span>
+    </div>
+  </div>
+</footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/storage.js"></script>
+<script src="js/card-preview.js"></script>
+</body>
+</html>

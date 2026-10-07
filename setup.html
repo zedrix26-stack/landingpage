@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NFC Setup — TapX</title>
+  <meta name="description" content="How to write your TapX profile URL onto an NFC card and test it.">
+  <meta name="theme-color" content="#0a0c14">
+  <link rel="icon" type="image/jpeg" href="assets/3.jpg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="index.html" aria-label="TapX home">
+      <span class="brand__mark"><img src="assets/2.png" alt="TapX"></span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="index.html#how">How it works</a>
+      <a href="card-preview.html">Card design</a>
+      <a href="setup.html">NFC setup</a>
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+    <div class="header-actions">
+      <a class="btn btn--primary btn--sm" href="dashboard.html">Create profile</a>
+      <button class="icon-btn nav-toggle" data-nav-toggle type="button"
+              aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">
+        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="mobile-nav" id="mobile-nav" aria-label="Mobile navigation">
+  <a href="index.html#how">How it works</a>
+  <a href="card-preview.html">Card design</a>
+  <a href="setup.html">NFC setup</a>
+  <a href="dashboard.html">Dashboard</a>
+</nav>
+
+<main class="main-content" id="main" style="padding-top:30px;">
+
+  <div class="panel__head">
+    <h1>NFC Setup</h1>
+    <p>Your card stores <strong>one URL</strong>. When someone taps it, their
+       phone opens your profile directly — no app, no account, nothing in
+       between.</p>
+  </div>
+
+  <!-- ---------------- YOUR URL ---------------- -->
+  <div class="box">
+    <div class="box__head">
+      <div><h2>Your TapX Profile URL</h2><p>This is the exact data to write
+        onto the chip.</p></div>
+      <span class="badge">URL record</span>
+    </div>
+
+    <div class="info-grid" style="box-shadow:none;">
+      <div class="info-row"><dt>Status</dt><dd>Ready to write</dd></div>
+      <div class="info-row"><dt>Record type</dt><dd>URL</dd></div>
+      <div class="info-row"><dt>TapX profile URL</dt><dd id="nfc-url">—</dd></div>
+    </div>
+
+    <div class="action-bar">
+      <button class="btn btn--primary btn--sm" type="button" id="btn-copy">
+        <i class="fa-regular fa-copy" aria-hidden="true"></i> Copy URL</button>
+      <a class="btn btn--soft btn--sm" id="btn-test" href="profile.html?user=juan"
+         target="_blank" rel="noopener noreferrer">
+        <i class="fa-solid fa-flask" aria-hidden="true"></i> Test Profile</a>
+      <a class="btn btn--soft btn--sm" id="btn-open" href="profile.html?user=juan"
+         target="_blank" rel="noopener noreferrer">
+        <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i> Open Profile</a>
+      <a class="btn btn--ghost btn--sm" href="#writing">
+        <i class="fa-solid fa-book-open" aria-hidden="true"></i> Writing Guide</a>
+    </div>
+  </div>
+
+  <!-- ---------------- NFC DATA ROW ---------------- -->
+  <div class="box">
+    <div class="box__head">
+      <div><h3>NFC data</h3><p>What your writing app should show after a
+        successful write.</p></div>
+    </div>
+    <div class="info-grid" style="box-shadow:none;">
+      <div class="info-row"><dt>Type</dt><dd>URL</dd></div>
+      <div class="info-row"><dt>Data</dt><dd id="nfc-data">—</dd></div>
+    </div>
+  </div>
+
+  <!-- ---------------- PHYSICAL CHIP WARNING ---------------- -->
+  <div class="notice notice--info" style="margin-top:20px;">
+    <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+    <span><strong>Important:</strong> TapX only gives you the data — the URL
+      must be <strong>physically installed in your card</strong> with an NFC
+      writing app (Android: NFC Tools, NFC Writer…). This prototype does not
+      program chips itself. Do not write sensitive personal information
+      onto a public card; the URL only opens your profile page.</span>
+  </div>
+
+  <!-- ---------------- WRITING STEPS ---------------- -->
+  <div class="box" id="writing" style="margin-top:20px;">
+    <div class="box__head">
+      <div><h3>Writing steps</h3><p>About two minutes with a phone that has
+        NFC.</p></div>
+      <span class="badge">8 steps</span>
+    </div>
+    <ol class="steps-list">
+      <li>Tap <strong>Copy URL</strong> above.</li>
+      <li>Open an <strong>NFC writing app</strong> on your phone
+          (NFC Tools works well).</li>
+      <li>Select <strong>Write</strong>.</li>
+      <li>Add a <strong>URL / URI record</strong>.</li>
+      <li><strong>Paste</strong> the TapX URL you copied.</li>
+      <li>Hold the <strong>NFC card</strong> against the back of the phone.</li>
+      <li>Tap <strong>Write</strong> and wait for success.</li>
+      <li><strong>Test it:</strong> tap the finished card on any phone — your
+          profile must open directly.</li>
+    </ol>
+  </div>
+
+  <!-- ---------------- PRODUCTION ---------------- -->
+  <div class="box" id="production" style="margin-top:20px;">
+    <div class="box__head">
+      <div><h3>Production guide</h3><p>When you move the prototype to a real
+        host.</p></div>
+      <span class="badge">hosting</span>
+    </div>
+    <ul class="steps-list">
+      <li><strong>Use HTTPS.</strong> Host the site on a real domain with a
+          valid certificate — phones block <code>file://</code> and plain
+          <code>http://</code> links on a tap.</li>
+      <li><strong>Keep the URL stable.</strong> Once chips are written, do not
+          move <code>profile.html</code>; a moved file breaks every card in
+          the field.</li>
+      <li><strong>Chips hold one URL each.</strong> Editing links or your
+          photo later never requires rewriting the chip.</li>
+      <li><strong>Print on PVC.</strong> Use a card printer or a service that
+          prints CR80 cards; desktop printers rarely match PVC quality.</li>
+    </ul>
+  </div>
+
+  <div class="notice" style="margin-top:20px;">
+    <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+    <span>TapX never claims to write NFC chips itself and never stores your
+      data on the chip — only this one public URL. Do not write sensitive
+      personal information anywhere except your own profile page.</span>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-note" style="margin:0;padding:0;border:none;">
+      <span>© <span data-year>2026</span> TapX — NFC setup guide</span>
+      <span>Prototype · no backend</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/app.js"></script>
+<script src="js/storage.js"></script>
+<script>
+/* Fills the URL section with the active profile's tap URL. */
+(function () {
+  'use strict';
+
+  function activeUsername() {
+    var S = window.TapXStorage;
+    var name = (S.getSettings() || {}).activeProfile;
+    if (name && S.getProfile(name)) return name;
+    return 'juan';
+  }
+
+  function fill() {
+    var TapX = window.TapX;
+    if (!TapX || !window.TapXStorage) return;
+
+    var user = activeUsername();
+    var url = TapX.tapUrl(user);
+
+    document.getElementById('nfc-url').textContent = url;
+    document.getElementById('nfc-data').textContent = url;
+    document.getElementById('btn-test').href = url;
+    document.getElementById('btn-open').href = url;
+    document.getElementById('btn-copy').onclick = function () {
+      TapX.copy(url, 'Profile URL copied');
+    };
+  }
+
+  document.addEventListener('tapx:ready', fill);
+  if (document.readyState !== 'loading') fill();
+})();
+</script>
+</body>
+</html>

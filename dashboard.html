@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard — TapX</title>
+  <meta name="description" content="Create and manage your TapX digital profile, NFC URL and PVC card design.">
+  <meta name="theme-color" content="#0a0c14">
+  <link rel="icon" type="image/jpeg" href="assets/3.jpg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<div class="app-shell">
+
+  <!-- ============================ SIDEBAR ============================ -->
+  <aside class="sidebar" id="sidebar" aria-label="Dashboard navigation">
+    <div class="sidebar__head">
+      <a class="brand" href="index.html" aria-label="TapX home">
+        <span class="brand__mark"><img src="assets/2.png" alt="TapX"></span>
+      </a>
+      <button class="sidebar__close" type="button" data-sidebar-close aria-label="Close menu">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <nav class="side-nav" id="side-nav">
+      <span class="side-nav__label">Workspace</span>
+      <a href="#overview" data-panel="overview" class="is-active">
+        <i class="fa-solid fa-gauge-high" aria-hidden="true"></i> Dashboard</a>
+      <a href="#cards" data-panel="cards">
+        <i class="fa-solid fa-id-card-clip" aria-hidden="true"></i> My Cards</a>
+      <a href="#profile" data-panel="profile">
+        <i class="fa-solid fa-user-pen" aria-hidden="true"></i> My Profile</a>
+      <a href="#social" data-panel="social">
+        <i class="fa-solid fa-share-nodes" aria-hidden="true"></i> Social Links</a>
+      <a href="#card" data-panel="card">
+        <i class="fa-solid fa-id-card" aria-hidden="true"></i> Card Design</a>
+
+      <span class="side-nav__label">Sharing</span>
+      <a href="#nfc" data-panel="nfc">
+        <i class="fa-solid fa-nfc-symbol" aria-hidden="true"></i> NFC Setup</a>
+
+      <span class="side-nav__label">System</span>
+      <a href="#settings" data-panel="settings">
+        <i class="fa-solid fa-gear" aria-hidden="true"></i> Settings</a>
+      <a href="admin.html">
+        <i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Admin (demo)</a>
+    </nav>
+
+    <div class="sidebar__foot">
+      <span class="storage-pill" id="storage-pill">
+        <span class="dot" aria-hidden="true"></span>
+        <span id="storage-text">localStorage active</span>
+      </span>
+      <span>Prototype — data stays in this browser.</span>
+    </div>
+  </aside>
+  <div class="sidebar-backdrop" id="sidebar-backdrop" data-sidebar-close></div>
+
+  <!-- ============================ MAIN ============================ -->
+  <div class="main-col">
+    <header class="topbar">
+      <button class="icon-btn topbar__menu" type="button" data-sidebar-open
+              aria-label="Open navigation menu">
+        <i class="fa-solid fa-bars" aria-hidden="true"></i>
+      </button>
+      <h1 id="page-title">Dashboard</h1>
+      <a class="btn btn--soft btn--sm" id="view-profile-btn" href="profile.html?user=juan" target="_blank" rel="noopener noreferrer">
+        <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+        <span class="sr-only">Open my public profile</span> View
+      </a>
+    </header>
+
+    <main class="main-content" id="main-content">
+
+      <!-- ---------------- OVERVIEW ---------------- -->
+      <section class="panel is-active" id="panel-overview" aria-labelledby="ov-title">
+        <div class="panel__head">
+          <h2 id="ov-title">Welcome back<span id="ov-name"></span></h2>
+          <p>Everything you need to share your identity with one tap.</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat">
+            <div class="stat__icon"><i class="fa-solid fa-eye" aria-hidden="true"></i></div>
+            <div class="stat__value" id="stat-views">0</div>
+            <div class="stat__label">Profile views</div>
+          </div>
+          <div class="stat">
+            <div class="stat__icon"><i class="fa-solid fa-link" aria-hidden="true"></i></div>
+            <div class="stat__value" id="stat-links">0</div>
+            <div class="stat__label">Active links</div>
+          </div>
+          <div class="stat">
+            <div class="stat__icon"><i class="fa-solid fa-id-card" aria-hidden="true"></i></div>
+            <div class="stat__value" id="stat-cards">1</div>
+            <div class="stat__label">Customer cards</div>
+          </div>
+          <div class="stat">
+            <div class="stat__icon"><i class="fa-solid fa-layer-group" aria-hidden="true"></i></div>
+            <div class="stat__value" id="stat-plan">Free</div>
+            <div class="stat__label">Plan (demo)</div>
+          </div>
+        </div>
+
+        <div class="overview-grid">
+          <div class="box">
+            <div class="box__head">
+              <div>
+                <h3>Your profile</h3>
+                <p>This is what people see when they tap your card.</p>
+              </div>
+            </div>
+
+            <div class="mini-profile">
+              <img id="ov-avatar" src="assets/default-avatar.png" alt="Your profile photo">
+              <div>
+                <h4 id="ov-fullname">—</h4>
+                <p id="ov-title-line">—</p>
+                <p id="ov-handle" style="color:var(--accent-solid);font-weight:600;">—</p>
+              </div>
+            </div>
+
+            <p class="form-section-title">NFC URL</p>
+            <div class="code-box">
+              <span id="ov-url" style="flex:1;">—</span>
+              <button class="btn btn--soft btn--sm" type="button" data-copy-target="ov-url">
+                <i class="fa-regular fa-copy" aria-hidden="true"></i> Copy
+              </button>
+            </div>
+
+            <div class="action-bar">
+              <a class="btn btn--primary btn--sm" href="#profile" data-panel-link="profile">
+                <i class="fa-solid fa-pen" aria-hidden="true"></i> Edit Profile</a>
+              <a class="btn btn--soft btn--sm" href="card-preview.html">
+                <i class="fa-regular fa-image" aria-hidden="true"></i> Preview Card</a>
+              <a class="btn btn--soft btn--sm" href="card-preview.html?print=both">
+                <i class="fa-solid fa-print" aria-hidden="true"></i> Print Card</a>
+              <button class="btn btn--ghost btn--sm" type="button" data-copy-target="ov-url">
+                <i class="fa-regular fa-copy" aria-hidden="true"></i> Copy NFC URL</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="box" style="margin-top:18px;">
+          <div class="box__head">
+            <div>
+              <h3>NFC instructions (quick)</h3>
+              <p>The website never writes chips — a separate NFC app does.</p>
+            </div>
+            <a class="btn btn--soft btn--sm" href="#nfc" data-panel-link="nfc">Full setup</a>
+          </div>
+          <ol class="steps-list">
+            <li>Copy your <strong>TapX URL</strong>.</li>
+            <li>Open any <strong>NFC writing app</strong> on your phone.</li>
+            <li>Select <strong>Write</strong> → add a <strong>URL / URI record</strong>.</li>
+            <li><strong>Paste</strong> your TapX URL and hold the card to the phone.</li>
+            <li><strong>Test</strong> with another NFC-enabled phone.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ---------------- MY CARDS (customer production list) ---------------- -->
+      <section class="panel" id="panel-cards" aria-labelledby="cr-title">
+        <div class="panel__head">
+          <h2 id="cr-title">My Cards</h2>
+          <p>You run this website — but you produce one PVC card per customer.
+             Each customer gets their own profile and NFC URL.</p>
+        </div>
+
+        <div class="cards-summary">
+          <div class="stat">
+            <div class="stat__icon"><i class="fa-solid fa-rectangle-list" aria-hidden="true"></i></div>
+            <div class="stat__value" id="cards-total">0</div>
+            <div class="stat__label">Cards in production</div>
+          </div>
+          <div class="stat">
+            <div class="stat__icon"><i class="fa-solid fa-print" aria-hidden="true"></i></div>
+            <div class="stat__value" id="cards-printed">0</div>
+            <div class="stat__label">Printed (NFC pending)</div>
+          </div>
+          <div class="stat">
+            <div class="stat__icon"><i class="fa-solid fa-circle-check" aria-hidden="true"></i></div>
+            <div class="stat__value" id="cards-issued">0</div>
+            <div class="stat__label">Issued (NFC written)</div>
+          </div>
+        </div>
+
+        <div class="box">
+          <div class="box__head">
+            <div>
+              <h3>Customer cards</h3>
+              <p>Tap status stays in this browser — the card status is
+                 <strong>draft → printed → issued</strong>.</p>
+            </div>
+            <button class="btn btn--primary btn--sm" type="button" id="card-new">
+              <i class="fa-solid fa-plus" aria-hidden="true"></i> Create card for a customer</button>
+          </div>
+          <div class="cards-list" id="cards-list" aria-live="polite"></div>
+        </div>
+
+        <div class="box" style="margin-top:18px;">
+          <div class="box__head">
+            <div><h3>Producing a customer card</h3>
+              <p>The flow you follow for every customer.</p></div>
+          </div>
+          <ol class="steps-list">
+            <li><strong>Create card</strong> — fill in the customer's name and links.</li>
+            <li><strong>Design</strong> — open the card designer, pick theme and accent.</li>
+            <li><strong>Print</strong> — print front &amp; back at exact CR80 size.</li>
+            <li><strong>Write NFC</strong> — copy the customer's NFC URL
+                into any NFC writing app and write it to the chip.</li>
+            <li><strong>Test &amp; issue</strong> — tap the card with a phone, then set
+                status to <strong>Issued</strong>.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ---------------- MY PROFILE (editor) ---------------- -->
+      <section class="panel" id="panel-profile" aria-labelledby="pf-title">
+        <div class="panel__head">
+          <h2 id="pf-title">My Profile</h2>
+          <p>Create your profile — we generate a unique URL you can write to an NFC card.</p>
+        </div>
+
+        <form class="box" id="profile-form" novalidate>
+          <div class="form-section-title">Photo</div>
+          <div class="avatar-editor">
+            <img id="pf-avatar" src="assets/default-avatar.png" alt="Current profile photo">
+            <div class="avatar-editor__actions">
+              <label class="btn btn--soft btn--sm" for="pf-image-file" style="cursor:pointer;">
+                <i class="fa-solid fa-upload" aria-hidden="true"></i> Upload photo
+              </label>
+              <input type="file" id="pf-image-file" accept="image/*" class="sr-only">
+              <button class="btn btn--ghost btn--sm" type="button" id="pf-image-reset">Remove</button>
+            </div>
+            <p class="hint" style="flex-basis:100%;">Images are resized to 256px and stored in your browser.</p>
+          </div>
+
+          <div class="form-section-title">Identity</div>
+          <div class="form-grid form-grid--2">
+            <div class="field" data-field="fullName">
+              <label for="pf-fullName">Full name <span class="req">*</span></label>
+              <input class="input" id="pf-fullName" name="fullName" type="text"
+                      maxlength="80" autocomplete="name" placeholder="Juan Delacruz">
+              <span class="error-msg" id="err-fullName"></span>
+            </div>
+            <div class="field" data-field="username">
+              <label for="pf-username">Username <span class="req">*</span></label>
+              <div class="input-group">
+                <span class="input-group__prefix" id="pf-url-prefix">/u/</span>
+                <input class="input" id="pf-username" name="username" type="text"
+                       maxlength="30" autocomplete="off" placeholder="juan">
+              </div>
+              <span class="hint">Letters, numbers, underscore or hyphen (3–30).</span>
+              <span class="error-msg" id="err-username"></span>
+            </div>
+            <div class="field" data-field="title">
+              <label for="pf-title">Title</label>
+              <input class="input" id="pf-title" name="title" type="text"
+                     maxlength="70" placeholder="BSIT Student">
+            </div>
+            <div class="field" data-field="location">
+              <label for="pf-location">Location</label>
+              <input class="input" id="pf-location" name="location" type="text"
+                     maxlength="70" placeholder="Manila, Philippines">
+            </div>
+            <div class="field field--full" data-field="bio">
+              <label for="pf-bio">Bio</label>
+              <textarea class="textarea" id="pf-bio" name="bio" maxlength="280"
+                        placeholder="A short introduction shown on your profile."></textarea>
+              <span class="hint"><span id="bio-count">0</span>/280</span>
+            </div>
+          </div>
+
+          <div class="form-section-title">Education</div>
+          <div class="form-grid form-grid--2">
+            <div class="field" data-field="school">
+              <label for="pf-school">School</label>
+              <input class="input" id="pf-school" name="school" type="text" maxlength="90"
+                     placeholder="Northfield Institute of Technology">
+            </div>
+            <div class="field" data-field="course">
+              <label for="pf-course">Course</label>
+              <input class="input" id="pf-course" name="course" type="text" maxlength="90"
+                     placeholder="BS Information Technology">
+            </div>
+            <div class="field" data-field="yearLevel">
+              <label for="pf-yearLevel">Year level</label>
+              <input class="input" id="pf-yearLevel" name="yearLevel" type="text" maxlength="30"
+                     placeholder="3rd Year">
+            </div>
+          </div>
+
+          <div class="form-section-title">Contact</div>
+          <div class="form-grid form-grid--2">
+            <div class="field" data-field="email">
+              <label for="pf-email">Email</label>
+              <input class="input" id="pf-email" name="email" type="email" maxlength="90"
+                     autocomplete="email" placeholder="you@example.com">
+              <span class="error-msg" id="err-email"></span>
+            </div>
+            <div class="field" data-field="phone">
+              <label for="pf-phone">Phone</label>
+              <input class="input" id="pf-phone" name="phone" type="tel" maxlength="30"
+                     autocomplete="tel" placeholder="+63 900 000 0000">
+            </div>
+            <div class="field" data-field="website">
+              <label for="pf-website">Website</label>
+              <input class="input" id="pf-website" name="website" type="text" maxlength="140"
+                     placeholder="yourname.com or https://…">
+            </div>
+            <div class="field" data-field="portfolio">
+              <label for="pf-portfolio">Portfolio</label>
+              <input class="input" id="pf-portfolio" name="portfolio" type="text" maxlength="140"
+                     placeholder="https://…/portfolio">
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn--primary" type="submit">
+              <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> Save profile
+            </button>
+            <a class="btn btn--ghost" href="#social" data-panel-link="social">Next: social links</a>
+            <span class="autosave-status" id="pf-autosave-status" aria-live="polite"></span>
+          </div>
+        </form>
+      </section>
+
+      <!-- ---------------- SOCIAL LINKS ---------------- -->
+      <section class="panel" id="panel-social" aria-labelledby="so-title">
+        <div class="panel__head">
+          <h2 id="so-title">Social Links</h2>
+          <p>Type a username <em>or</em> a full URL — we normalise it to the correct link.</p>
+        </div>
+
+        <form class="box" id="social-form" novalidate>
+          <div class="form-grid form-grid--2">
+            <div class="field" data-field="instagram">
+              <label for="so-instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i> Instagram</label>
+              <input class="input" id="so-instagram" name="instagram" type="text" maxlength="140" placeholder="username or https://instagram.com/username">
+            </div>
+            <div class="field" data-field="tiktok">
+              <label for="so-tiktok"><i class="fa-brands fa-tiktok" aria-hidden="true"></i> TikTok</label>
+              <input class="input" id="so-tiktok" name="tiktok" type="text" maxlength="140" placeholder="username or https://tiktok.com/@username">
+            </div>
+            <div class="field" data-field="facebook">
+              <label for="so-facebook"><i class="fa-brands fa-facebook" aria-hidden="true"></i> Facebook</label>
+              <input class="input" id="so-facebook" name="facebook" type="text" maxlength="140" placeholder="username or https://facebook.com/username">
+            </div>
+            <div class="field" data-field="messenger">
+              <label for="so-messenger"><i class="fa-brands fa-facebook-messenger" aria-hidden="true"></i> Messenger</label>
+              <input class="input" id="so-messenger" name="messenger" type="text" maxlength="140" placeholder="username or https://m.me/username">
+            </div>
+            <div class="field" data-field="linkedin">
+              <label for="so-linkedin"><i class="fa-brands fa-linkedin" aria-hidden="true"></i> LinkedIn</label>
+              <input class="input" id="so-linkedin" name="linkedin" type="text" maxlength="140" placeholder="username or https://linkedin.com/in/username">
+            </div>
+          </div>
+
+          <div class="form-section-title">How your links will look</div>
+          <div class="social-preview" id="social-preview" aria-live="polite"></div>
+
+          <div class="form-actions">
+            <button class="btn btn--primary" type="submit">
+              <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> Save social links
+            </button>
+            <a class="btn btn--ghost" href="#card" data-panel-link="card">Next: card design</a>
+            <span class="autosave-status" id="so-autosave-status" aria-live="polite"></span>
+          </div>
+        </form>
+      </section>
+
+      <!-- ---------------- CARD DESIGN ---------------- -->
+      <section class="panel" id="panel-card" aria-labelledby="cd-title">
+        <div class="panel__head">
+          <h2 id="cd-title">Card Design</h2>
+          <p>Design the PVC card (CR80 · 85.60 × 53.98 mm) and print it at exact size.</p>
+        </div>
+
+        <div class="design-grid">
+          <div class="box">
+            <div class="box__head"><div><h3>Front</h3><p>Logo, name and NFC mark.</p></div></div>
+            <div class="card-stage" style="padding:6px;">
+              <article class="pvc-card" aria-label="Card front mini preview">
+                <div class="pvc-card__front">
+                  <div class="pvc-card__brand"><span>TAPX</span><span class="nfc-ic">NFC</span></div>
+                  <div class="pvc-card__body">
+                    <div>
+                      <p class="pvc-card__name" id="cd-name">YOUR NAME</p>
+                      <p class="pvc-card__title" id="cd-title">TITLE / COURSE</p>
+                    </div>
+                  </div>
+                  <div class="pvc-card__foot"><span class="pulse">TAP TO CONNECT</span><span>NFC</span></div>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <div class="box">
+            <div class="box__head"><div><h3>Back</h3><p>Small QR code, URL and social icons.</p></div></div>
+            <div class="card-stage" style="padding:6px;">
+              <article class="pvc-card" aria-label="Card back mini preview">
+                <div class="pvc-card__back" style="display:flex;">
+                  <div class="pvc-card__qr" id="cd-qr" role="img"
+                       aria-label="Small QR code linking to the profile"></div>
+                  <div class="pvc-card__socials" aria-hidden="true">
+                    <i class="fa-brands fa-instagram"></i>
+                    <i class="fa-brands fa-tiktok"></i>
+                    <i class="fa-brands fa-facebook"></i>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+
+        <div class="box" style="margin-top:18px;">
+          <div class="box__head">
+            <div><h3>Designer &amp; printing</h3>
+              <p>Themes, accent colours, safe margins, NFC antenna guide and print modes.</p></div>
+          </div>
+          <div class="action-bar">
+            <a class="btn btn--primary" href="card-preview.html">
+              <i class="fa-solid fa-palette" aria-hidden="true"></i> Open card designer</a>
+            <a class="btn btn--soft" href="card-preview.html?print=front">
+              <i class="fa-solid fa-print" aria-hidden="true"></i> Print front</a>
+            <a class="btn btn--soft" href="card-preview.html?print=back">
+              <i class="fa-solid fa-print" aria-hidden="true"></i> Print back</a>
+            <a class="btn btn--ghost" href="card-preview.html?print=both">
+              <i class="fa-solid fa-print" aria-hidden="true"></i> Print both</a>
+          </div>
+          <div class="notice" style="margin-top:16px;">
+            <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+            <span>For professional production, use a PVC card printer or a
+              professional card printing service. Desktop printers rarely match
+              PVC card stock quality.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------------- NFC SETUP ---------------- -->
+      <section class="panel" id="panel-nfc" aria-labelledby="nf-title">
+        <div class="panel__head">
+          <h2 id="nf-title">NFC Setup</h2>
+          <p>Your card stores one URL. When it is tapped, the
+             <strong>profile opens directly</strong> on the phone — nothing
+             in between.</p>
+        </div>
+
+        <div class="box">
+          <div class="box__head"><div><h3>NFC status</h3><p>Chip program status for this card.</p></div></div>
+          <div class="info-grid" style="box-shadow:none;">
+            <div class="info-row"><dt>Status</dt><dd id="nfc-ready">Ready</dd></div>
+            <div class="info-row"><dt>NFC data</dt><dd>URL</dd></div>
+            <div class="info-row"><dt>TapX profile URL</dt><dd id="nfc-url">—</dd></div>
+          </div>
+
+          <div class="action-bar">
+            <button class="btn btn--primary btn--sm" type="button" id="nfc-copy">
+              <i class="fa-regular fa-copy" aria-hidden="true"></i> Copy NFC URL</button>
+            <a class="btn btn--soft btn--sm" id="nfc-test" href="profile.html?user=juan" target="_blank" rel="noopener noreferrer">
+              <i class="fa-solid fa-flask" aria-hidden="true"></i> Test NFC</a>
+            <a class="btn btn--soft btn--sm" href="card-preview.html?print=both">
+              <i class="fa-solid fa-print" aria-hidden="true"></i> Print Card</a>
+            <button class="btn btn--soft btn--sm" type="button" id="nfc-guide">
+              <i class="fa-solid fa-book-open" aria-hidden="true"></i> NFC Setup Guide</button>
+          </div>
+
+          <p class="hint" id="nfc-status" style="margin-top:14px;"></p>
+        </div>
+
+        <div class="box">
+          <div class="box__head"><div><h3>Writing steps</h3><p>Use any NFC writing app (Android: NFC Tools, NFC Writer…).</p></div></div>
+          <ol class="steps-list">
+            <li>Copy the <strong>NFC URL</strong> above.</li>
+            <li>Open an <strong>NFC writing app</strong> on your phone.</li>
+            <li>Select <strong>Write</strong>.</li>
+            <li>Add a <strong>URL / URI record</strong>.</li>
+            <li><strong>Paste</strong> the TapX URL.</li>
+            <li>Hold the <strong>NFC card</strong> near the phone.</li>
+            <li><strong>Write</strong> the URL to the chip.</li>
+            <li><strong>Test</strong> — tapping must open the profile directly.</li>
+          </ol>
+
+          <div class="notice" style="margin-top:18px;">
+            <i class="fa-solid fa-microchip" aria-hidden="true"></i>
+            <span><strong>Your NFC chip must be physically installed in your card
+              and programmed with this URL.</strong> The TapX website does not
+              contain or physically install the NFC chip. TapX does not
+              physically write NFC chips — use an NFC-enabled phone and an NFC
+              writing app to program the card.</span>
+          </div>
+
+          <div class="notice" style="margin-top:12px;">
+            <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+            <span><strong>Do not write sensitive personal information directly
+              to the NFC chip.</strong> Store only your TapX URL — NFC data can
+              be read by anyone who taps the card.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------------- SETTINGS ---------------- -->
+      <section class="panel" id="panel-settings" aria-labelledby="st-title">
+        <div class="panel__head">
+          <h2 id="st-title">Settings</h2>
+          <p>Prototype preferences, storage and future business features.</p>
+        </div>
+
+        <div class="box">
+          <div class="box__head"><div><h3>Profile</h3><p>Switch between profiles on this device.</p></div></div>
+          <div class="field" style="max-width:360px;">
+            <label for="st-active">Active profile</label>
+            <select class="select input" id="st-active"></select>
+          </div>
+          <div class="action-bar">
+            <button class="btn btn--soft btn--sm" type="button" id="st-new">
+              <i class="fa-solid fa-plus" aria-hidden="true"></i> New profile</button>
+          </div>
+        </div>
+
+        <div class="box">
+          <div class="box__head"><div><h3>Storage &amp; data</h3>
+            <p>Prototype data lives in your browser only.</p></div></div>
+          <div class="action-bar">
+            <button class="btn btn--soft btn--sm" type="button" id="st-export">
+              <i class="fa-solid fa-file-export" aria-hidden="true"></i> Export profiles (JSON)</button>
+            <button class="btn btn--soft btn--sm" type="button" id="st-reseed">
+              <i class="fa-solid fa-rotate" aria-hidden="true"></i> Restore demo profile</button>
+          </div>
+        </div>
+
+        <div class="box">
+          <div class="box__head"><div><h3>Coming later</h3>
+            <p>Placeholders for the future business platform — not implemented in the prototype.</p></div></div>
+          <div class="grid" style="gap:12px;">
+            <div class="soon-card"><i class="fa-solid fa-user-lock" aria-hidden="true"></i>
+              <div><h4>User accounts</h4><p>Email login &amp; cloud sync</p></div><span class="soon-tag">Planned</span></div>
+            <div class="soon-card"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+              <div><h4>Orders &amp; payments</h4><p>Card orders, checkout, tracking</p></div><span class="soon-tag">Planned</span></div>
+            <div class="soon-card"><i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+              <div><h4>Analytics</h4><p>NFC tap statistics</p></div><span class="soon-tag">Planned</span></div>
+            <div class="soon-card"><i class="fa-solid fa-globe" aria-hidden="true"></i>
+              <div><h4>Custom domains</h4><p>you@yourdomain.com profiles</p></div><span class="soon-tag">Planned</span></div>
+            <div class="soon-card"><i class="fa-solid fa-credit-card" aria-hidden="true"></i>
+              <div><h4>Subscription plans</h4><p>Free / Pro / Business tiers</p></div><span class="soon-tag">Planned</span></div>
+          </div>
+        </div>
+
+        <div class="box danger-zone">
+          <div class="box__head"><div><h3>Danger zone</h3><p>These actions cannot be undone.</p></div></div>
+          <div class="action-bar">
+            <button class="btn btn--danger btn--sm" type="button" id="st-delete">
+              <i class="fa-solid fa-trash" aria-hidden="true"></i> Delete active profile</button>
+            <button class="btn btn--danger btn--sm" type="button" id="st-reset">
+              <i class="fa-solid fa-broom" aria-hidden="true"></i> Erase all TapX data</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="js/app.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>
