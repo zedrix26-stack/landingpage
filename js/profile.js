@@ -118,7 +118,7 @@
       ['username', 'username'], ['fullName', 'fullname'],
       ['title', 'title'], ['bio', 'bio'],
       ['profileImage', 'profileimage'], ['school', 'school'],
-      ['course', 'course'], ['yearLevel', 'yearlevel'],
+      ['program', 'program'], ['yearLevel', 'yearlevel'],
       ['email', 'email'], ['phone', 'phone'], ['location', 'location'],
       ['instagram', 'instagram'], ['facebook', 'facebook'],
       ['tiktok', 'tiktok'], ['messenger', 'messenger'],
@@ -326,12 +326,12 @@
     }
 
     /* ---------- school information ---------- */
-    if (p.school || p.course || p.yearLevel) {
+    if (p.school || p.program || p.yearLevel) {
       var infoSection = node('section', 'p-section');
       infoSection.appendChild(sectionTitle('fa-solid fa-graduation-cap', 'Education'));
       var dl = node('dl', 'info-grid');
       addInfoRow(dl, 'School', p.school);
-      addInfoRow(dl, 'Course', p.course);
+      addInfoRow(dl, 'Program', p.program);
       addInfoRow(dl, 'Year Level', p.yearLevel);
       infoSection.appendChild(dl);
       root.appendChild(infoSection);
