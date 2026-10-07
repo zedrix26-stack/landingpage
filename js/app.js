@@ -1,27 +1,7 @@
-/**
- * TapX — app.js
- * ------------------------------------------------------------------
- * Shared helpers used by every page: theme toggle, toast notifications,
- * clipboard, QR rendering, safe DOM helpers, NFC capability detection
- * and small UI behaviours (mobile nav, scroll reveal).
- *
- * IMPORTANT — what this app does / does not do:
- *   WEBSITE   → creates and manages the digital profile + its URL.
- *   NFC CARD  → physically stores that URL (written by a separate app).
- *   PRINTING  → prints the visual design onto PVC (card-preview page).
- * The site NEVER claims to write NFC chips itself.
- * ------------------------------------------------------------------
- */
 (function () {
   'use strict';
 
   var TapX = window.TapX = window.TapX || {};
-
-  /* ================================================================
-     1. SAFE DOM HELPERS
-     Everything rendered from user data goes through textContent or
-     escapeHtml(). We never assign raw user strings to innerHTML.
-     ================================================================ */
 
   function escapeHtml(value) {
     return String(value === null || value === undefined ? '' : value)
@@ -32,17 +12,13 @@
       .replace(/'/g, '&#39;');
   }
 
-  /** Sets textContent safely (never parses HTML). */
   function setText(el, value) {
     if (el) el.textContent = value === null || value === undefined ? '' : value;
   }
 
-  /** Clears an element safely. */
   function clear(el) {
     if (el) while (el.firstChild) el.removeChild(el.firstChild);
   }
-
-  /** Creates an element with optional className, text and attributes. */
   function el(tag, className, text, attrs) {
     var node = document.createElement(tag);
     if (className) node.className = className;
@@ -54,34 +30,13 @@
     return node;
   }
 
-  /* ================================================================
-     2. URL HELPERS
-     Profile URLs are always built from the current origin so the NFC
-     URL works whether the site is opened from a domain, a subfolder
-     or a local file server. Nothing is hardcoded.
-     ================================================================ */
-
-  /**
-   * Builds an absolute profile URL for the current location.
-   * Works for https hosting, subfolders AND file:// (double-clicking
-   * index.html) because it derives the folder from location.href
-   * instead of hardcoding a domain.
-   * Example: https://site.com/tapx/profile.html?user=juan
-   */
   TapX.profileUrl = function (username) {
     var href = String(window.location.href).split('#')[0].split('?')[0];
     var dir = href.substring(0, href.lastIndexOf('/') + 1);
     return dir + 'profile.html?user=' + encodeURIComponent(username);
   };
 
-  /**
-   * The URL physically stored on the NFC chip.
-   * A tap on any phone opens the profile DIRECTLY (no interstitial).
-   * When the owner sets a "Public site address" in the dashboard
-   * (settings.publicBase, e.g. https://tapx.vercel.app), the chip URL
-   * becomes the pretty form https://tapx.vercel.app/zed — no .html.
-   * Otherwise it falls back to the local profile.html?user=... URL.
-   */
+
   TapX.tapUrl = function (username) {
     var base = '';
     try {
@@ -96,11 +51,7 @@
     return TapX.profileUrl(username);
   };
 
-  /**
-   * Compact URL for printing on the card back:
-   *   https://site.com/tapx/profile.html?user=juan -> site.com/tapx/profile.html?user=juan
-   *   file:///C:/.../profile.html?user=juan         -> profile.html?user=juan
-   */
+
   TapX.shortUrl = function (url) {
     var u = String(url || '');
     return /^https?:\/\//i.test(u) ? u.replace(/^https?:\/\//i, '') : u.split('/').pop();
@@ -119,9 +70,6 @@
     window.open(href, '_blank', 'noopener,noreferrer');
   };
 
-  /* ================================================================
-     3. TOAST NOTIFICATIONS
-     ================================================================ */
   var toastTimer = null;
 
   TapX.toast = function (message, kind) {
@@ -149,13 +97,10 @@
       }, 300);
     }, 2600);
 
-    /* keeps lint quiet about unused var in future edits */
     clearTimeout(toastTimer);
   };
 
-  /* ================================================================
-     4. CLIPBOARD
-     ================================================================ */
+
   TapX.copy = function (text, successMessage) {
     function done() {
       TapX.toast(successMessage || 'Copied to clipboard', 'success');
@@ -188,15 +133,7 @@
     } catch (e) { return false; }
   }
 
-  /* ================================================================
-     5. QR CODES  (library loaded from CDN — see each HTML page)
-     Uses qrcodejs with error correction level H where possible.
-     ================================================================ */
 
-  /**
-   * Renders a QR code into `container`.
-   * @returns {boolean} true on success.
-   */
   TapX.renderQR = function (container, text, size) {
     if (!container) return false;
     clear(container);
@@ -234,7 +171,7 @@
     }
   };
 
-  /** Downloads the QR code rendered inside `container` as a PNG. */
+
   TapX.downloadQR = function (container, filename) {
     if (!container) return;
     var canvas = container.querySelector('canvas');
@@ -257,10 +194,7 @@
     TapX.toast('QR code downloaded', 'success');
   };
 
-  /* ================================================================
-     6. NFC CAPABILITY DETECTION (informational only)
-     The core product never depends on Web NFC — this is a status hint.
-     ================================================================ */
+
   TapX.nfcStatus = function () {
     var supported = ('NDEFReader' in window);
     return {
@@ -271,19 +205,13 @@
     };
   };
 
-  /* ================================================================
-     7. THEME — DARK ONLY
-     TapX ships a single dark theme: no light mode, no toggle button.
-     initTheme() simply pins data-theme="dark" on every page.
-     ================================================================ */
+
   TapX.initTheme = function () {
     document.documentElement.setAttribute('data-theme', 'dark');
     document.documentElement.style.colorScheme = 'dark';
   };
 
-  /* ================================================================
-     8. PAGE CHROME — footer year, mobile nav, scroll reveal
-     ================================================================ */
+
   function initChrome() {
     /* dynamic copyright year */
     document.querySelectorAll('[data-year]').forEach(function (node) {
@@ -308,7 +236,7 @@
       });
     }
 
-    /* reveal-on-scroll (CSS animation, JS only toggles a class) */
+  
     var revealNodes = document.querySelectorAll('[data-reveal]');
     if ('IntersectionObserver' in window && revealNodes.length) {
       var io = new IntersectionObserver(function (entries) {
@@ -324,7 +252,7 @@
       revealNodes.forEach(function (n) { n.classList.add('is-revealed'); });
     }
 
-    /* mark external links as safe */
+
     document.querySelectorAll('a[target="_blank"]').forEach(function (a) {
       var rel = (a.getAttribute('rel') || '').split(' ');
       if (rel.indexOf('noopener') === -1) rel.push('noopener');
@@ -333,9 +261,7 @@
     });
   }
 
-  /* ================================================================
-     9. BOOT
-     ================================================================ */
+
   function boot() {
     TapX.initTheme();
     initChrome();
