@@ -34,7 +34,7 @@
     box.appendChild(node('p', '', message));
 
     (actions || []).forEach(function (action) {
-      /* hosted builds have no dashboard — never show dead admin links */
+
       if (isHosted() && /(^|\/)(dashboard|index)\.html/.test(action.href)) return;
       var a = document.createElement('a');
       a.className = 'btn btn--primary';
@@ -47,7 +47,7 @@
     document.title = title + ' — TapX';
   }
 
-  /** True when served from a real website (not file:// or localhost). */
+  
   function isHosted() {
     var proto = window.location.protocol;
     if (proto !== 'http:' && proto !== 'https:') return false;
@@ -61,8 +61,7 @@
     var params = new URLSearchParams(window.location.search);
     var fromQuery = (params.get('user') || '').trim();
     if (fromQuery) return fromQuery;
-    /* pretty path form: https://site.com/p/zedrix or /zedrix — but never
-       a file name like profile.html (the dot rule rejects it) */
+
     var segments = window.location.pathname.split('/').filter(Boolean);
     var last = segments.length ? segments[segments.length - 1] : '';
     try { last = decodeURIComponent(last); } catch (e) { /* keep raw */ }
@@ -72,7 +71,7 @@
     return '';
   }
 
-  /** NFC + QR destination: the pretty/public form of this profile URL. */
+  
   function canonicalUrl(username) {
     if (new URLSearchParams(window.location.search).get('user')) {
       return TapX.tapUrl(username);
@@ -119,12 +118,7 @@
       ]);
   }
 
-  /**
-   * Cloud rows cross the network, so they get the same coercion the
-   * local storage fence applies (short strings, safe image, real URLs).
-   * Database columns are lowercase (fullname, cardstatus, …) — they are
-   * mapped back to the camelCase fields the renderer expects.
-   */
+
   function sanitizeCloudRow(row) {
     var out = {};
     var TEXT = [
@@ -189,8 +183,7 @@
       return;
     }
 
-    /* cloud first (database is the source of truth once synced),
-       local storage as fallback — never reject on network errors */
+ 
     var cloud = window.TapXCloud;
     if (cloud && cloud.isReady()) {
       cloud.fetchProfile(username).then(function (res) {
@@ -211,7 +204,7 @@
     notFoundFallback(username, false);
   }
 
-  /** Counts a view once per browser session (avoids refresh spam). */
+  
   function countView(username) {
     var flag = 'tapx_counted_' + username.toLowerCase();
     try {
@@ -226,7 +219,7 @@
     clear(root);
     document.title = p.fullName + ' (@' + p.username + ') — TapX';
 
-    /* ---------- identity card ---------- */
+   
     var card = node('section', 'id-card');
     card.setAttribute('aria-label', 'Profile summary');
 
@@ -238,7 +231,7 @@
     avatar.alt = 'Photo of ' + p.fullName;
     avatar.loading = 'eager';
     avatar.decoding = 'async';
-    /* missing/broken image falls back to the default avatar */
+    
     avatar.onerror = function () {
       if (avatar.src.indexOf('default-avatar.png') === -1) {
         avatar.src = 'assets/default-avatar.png';
@@ -255,7 +248,7 @@
 
     if (p.bio) card.appendChild(node('p', 'profile-bio', p.bio));
 
-    /* verified badge + meta chips */
+   
     var meta = node('div', 'profile-meta');
     meta.appendChild(makeBadge('fa-solid fa-circle-check', 'TapX Verified',
       'badge badge--verified'));
@@ -267,7 +260,7 @@
     }
     card.appendChild(meta);
 
-    /* quick actions: share / save contact */
+    
     var actions = node('div', 'action-row');
     actions.appendChild(actionButton('fa-solid fa-share-nodes', 'Share', shareProfile));
     actions.appendChild(actionButton('fa-solid fa-address-card', 'Save Contact', saveContact));
@@ -275,7 +268,7 @@
 
     root.appendChild(card);
 
-    /* ---------- social links ---------- */
+   
     var socials = [
       { field: 'instagram', label: 'Instagram', icon: 'fa-brands fa-instagram', cls: 'ic-instagram' },
       { field: 'tiktok',    label: 'TikTok',    icon: 'fa-brands fa-tiktok',    cls: 'ic-tiktok' },
@@ -293,7 +286,7 @@
       }));
     }
 
-    /* ---------- contact ---------- */
+ 
     var contacts = [];
     if (p.email) {
       contacts.push({ cls: 'ic-mail', icon: 'fa-solid fa-envelope',
@@ -323,7 +316,7 @@
       }));
     }
 
-    /* ---------- portfolio / website ---------- */
+  
     var works = [];
     if (p.portfolio) {
       works.push({ cls: 'ic-portfolio', icon: 'fa-solid fa-briefcase',
@@ -341,7 +334,7 @@
       }));
     }
 
-    /* ---------- school information ---------- */
+
     if (p.school || p.course || p.yearLevel) {
       var infoSection = node('section', 'p-section');
       infoSection.appendChild(sectionTitle('fa-solid fa-graduation-cap', 'Education'));
@@ -354,7 +347,7 @@
     }
   }
 
-  /* ---------- render helpers ---------- */
+ 
   function makeBadge(faClass, text, extraClass) {
     var b = node('span', extraClass || 'badge');
     b.appendChild(icon(faClass));
@@ -379,7 +372,7 @@
     return h;
   }
 
-  /** Builds a link section; builder receives the list container. */
+
   function section(faClass, title, builder) {
     var sec = node('section', 'p-section');
     sec.appendChild(sectionTitle(faClass, title));
@@ -452,11 +445,11 @@
       navigator.share(data).catch(function () { /* user cancelled */ });
       return;
     }
-    /* fallback: copy link */
+    
     TapX.copy(currentUrl, 'Profile link copied');
   }
 
-  /** Generates and downloads a standard vCard 3.0 contact file. */
+  
   function saveContact() {
     var p = current;
     var lines = [
