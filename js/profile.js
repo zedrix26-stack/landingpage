@@ -347,7 +347,7 @@
       infoSection.appendChild(sectionTitle('fa-solid fa-graduation-cap', 'Education'));
       var dl = node('dl', 'info-grid');
       addInfoRow(dl, 'School', p.school);
-      addInfoRow(dl, 'Course', p.course);
+      addInfoRow(dl, 'Program', p.course);
       addInfoRow(dl, 'Year Level', p.yearLevel);
       infoSection.appendChild(dl);
       root.appendChild(infoSection);
