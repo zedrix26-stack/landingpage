@@ -1,0 +1,224 @@
+/* ==================================================================
+   TapX — profile.css
+   The public digital profile page.
+   Mobile-first: 480px content column, centred on desktop.
+   ================================================================== */
+
+[data-theme] { }
+.profile-page {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  background: var(--bg);
+}
+
+/* ambient glow behind the profile card on desktop */
+.profile-page::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(46% 34% at 50% 0%, rgba(79, 107, 255, .16), transparent 70%),
+    radial-gradient(38% 30% at 82% 78%, rgba(139, 92, 246, .12), transparent 70%);
+}
+[data-theme="dark"] .profile-page::before {
+  background:
+    radial-gradient(46% 34% at 50% 0%, rgba(79, 107, 255, .26), transparent 70%),
+    radial-gradient(38% 30% at 82% 78%, rgba(139, 92, 246, .18), transparent 70%);
+}
+
+.profile-topbar {
+  position: relative; z-index: 2;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px;
+  max-width: 560px; width: 100%; margin-inline: auto;
+}
+.profile-topbar .brand { font-size: 17px; }
+.profile-topbar .brand__mark { width: auto; height: 34px; }
+
+.profile-shell {
+  position: relative; z-index: 1;
+  width: 100%;
+  max-width: 480px;               /* spec: max content width 480px */
+  margin-inline: auto;
+  padding: 6px 16px 48px;
+  flex: 1;
+}
+
+/* ---------------- main identity card ---------------- */
+.id-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 30px 22px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.id-card::before {           /* thin gradient crown */
+  content: '';
+  position: absolute; inset: 0 0 auto;
+  height: 5px; background: var(--accent);
+}
+
+.avatar-wrap { position: relative; display: inline-block; }
+.profile-avatar {
+  width: 108px; height: 108px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--bg-soft);
+  border: 3px solid var(--surface);
+  box-shadow: 0 8px 24px rgba(16, 19, 34, .22);
+}
+.avatar-ring {
+  position: absolute; inset: -6px;
+  border-radius: 50%;
+  border: 2px dashed color-mix(in srgb, var(--accent-solid) 55%, transparent);
+  animation: spin 22s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.profile-name {
+  font-size: 26px; margin: 16px 0 4px;
+  word-break: break-word;
+}
+.profile-title {
+  color: var(--text-soft); font-size: 15px; font-weight: 500; margin: 0;
+}
+.profile-handle {
+  display: inline-block; margin-top: 7px;
+  font-size: 14px; color: var(--accent-solid); font-weight: 600;
+}
+.profile-bio {
+  margin: 14px auto 0; font-size: 15px; color: var(--text-soft);
+  max-width: 380px;
+}
+
+.profile-meta {
+  display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+  margin-top: 16px;
+}
+.meta-chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 13px; color: var(--text-soft);
+  background: var(--bg-soft); border: 1px solid var(--border);
+  padding: 7px 12px; border-radius: var(--radius-pill);
+}
+.meta-chip i { color: var(--accent-solid); }
+
+/* ---------------- action row ---------------- */
+.action-row {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  margin-top: 18px;
+}
+.action-btn {
+  min-height: var(--tap);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 5px;
+  padding: 10px 6px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg-elevated);
+  color: var(--text);
+  font: 600 12.5px/1.2 var(--font);
+  cursor: pointer; text-decoration: none;
+  transition: transform .16s var(--ease), border-color .16s, background .16s;
+}
+.action-btn i { font-size: 16px; color: var(--accent-solid); }
+.action-btn:hover { transform: translateY(-2px); border-color: var(--accent-solid); }
+
+/* ---------------- link sections ---------------- */
+.p-section { margin-top: 22px; }
+.p-section__title {
+  display: flex; align-items: center; gap: 9px;
+  font-size: 12.5px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--text-faint);
+  margin: 0 0 11px 4px;
+}
+.p-section__title i { color: var(--accent-solid); }
+
+.link-list { display: grid; gap: 10px; }
+.link-item {
+  display: flex; align-items: center; gap: 14px;
+  min-height: var(--tap);
+  padding: 13px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  text-decoration: none; color: var(--text);
+  box-shadow: var(--shadow-sm);
+  transition: transform .16s var(--ease), border-color .16s, box-shadow .16s;
+}
+.link-item:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--accent-solid) 45%, var(--border));
+  box-shadow: var(--shadow-md);
+}
+.link-item__icon {
+  width: 38px; height: 38px; flex-shrink: 0;
+  display: grid; place-items: center;
+  border-radius: 11px; font-size: 17px; color: #fff;
+}
+.link-item__text { min-width: 0; flex: 1; }
+.link-item__label { font-size: 14.5px; font-weight: 600; margin: 0; }
+.link-item__value {
+  font-size: 13px; color: var(--text-faint); margin: 1px 0 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.link-item__go { color: var(--text-faint); font-size: 13px; }
+
+/* brand colours */
+.ic-instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+.ic-tiktok    { background: #111; }
+.ic-facebook  { background: #1877f2; }
+.ic-linkedin  { background: #0a66c2; }
+.ic-messenger { background: linear-gradient(135deg, #00c6ff, #0078ff); }
+.ic-mail      { background: #ea4335; }
+.ic-phone     { background: #12854f; }
+.ic-web       { background: #5b6cff; }
+.ic-portfolio { background: #8b5cf6; }
+.ic-location  { background: #a5670a; }
+.ic-school    { background: #2d6cdf; }
+
+/* ---------------- school info ---------------- */
+.info-grid {
+  display: grid; gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 6px 16px;
+  box-shadow: var(--shadow-sm);
+}
+.info-row {
+  display: flex; justify-content: space-between; gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14.5px;
+}
+.info-row:last-child { border-bottom: none; }
+.info-row dt { color: var(--text-faint); font-weight: 500; margin: 0; }
+.info-row dd { margin: 0; font-weight: 600; text-align: right; word-break: break-word; }
+
+/* ---------------- bottom note ---------------- */
+.qr-card__hint {
+  font-size: 13.5px; color: var(--text-soft);
+  margin: 14px auto 0; max-width: 320px;
+  word-break: break-all;
+}
+
+/* ---------------- error screen ---------------- */
+.error-screen {
+  max-width: 420px; margin: 60px auto; text-align: center;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 44px 26px;
+  box-shadow: var(--shadow-md);
+}
+.error-screen i { font-size: 40px; color: #e5484d; margin-bottom: 16px; }
+.error-screen h1 { font-size: 22px; }
+.error-screen p { color: var(--text-soft); font-size: 15px; }
+.error-screen .btn { margin-top: 10px; }
+
+/* desktop polish */
+@media (min-width: 720px) {
+  .profile-shell { max-width: 520px; padding-top: 18px; }
+  .id-card { padding-top: 36px; }
+}
