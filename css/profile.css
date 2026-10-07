@@ -1,9 +1,3 @@
-/* ==================================================================
-   TapX — profile.css
-   The public digital profile page.
-   Mobile-first: 480px content column, centred on desktop.
-   ================================================================== */
-
 [data-theme] { }
 .profile-page {
   min-height: 100vh;
