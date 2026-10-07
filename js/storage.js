@@ -1,44 +1,19 @@
-/**
- * TapX — storage.js
- * ------------------------------------------------------------------
- * Prototype data layer. All profile data lives in localStorage so the
- * project runs with no backend (open index.html and it works).
- *
- * FUTURE BACKEND SWAP (see README-style notes in each function):
- * every public function below can later be replaced with a fetch()
- * call to a real API without touching the UI code, because the rest
- * of the app only talks to `TapXStorage`.
- *
- * Public API:
- *   saveProfile(profile)      -> profile (throws on validation error)
- *   getProfile(username)      -> profile | null
- *   getAllProfiles()          -> profile[]
- *   deleteProfile(username)   -> boolean
- *   profileExists(username)   -> boolean
- *   normalizeSocials(profile) -> profile (fills social URL shortcuts)
- *   recordView(username)      -> number (profile view counter)
- *   getViews(username)        -> number
- *   getSettings() / saveSettings(patch)
- *   seedDemo()                -> demo profile (runs once on first load)
- * ------------------------------------------------------------------
- */
 (function () {
   'use strict';
 
-  /* ---------- storage keys (namespaced to avoid collisions) ---------- */
+ 
   var KEYS = {
     profiles: 'tapx_profiles',
     views: 'tapx_views',
     settings: 'tapx_settings',
     seeded: 'tapx_seeded_v1',
-    removed: 'tapx_removed'       /* usernames the user deleted for good */
+    removed: 'tapx_removed'      
   };
 
-  /* In-memory mirror. If localStorage is blocked (private mode, iframe
-     sandbox...) the app still works for the current session. */
+
   var memory = {};
 
-  /* ---------- safe primitives -------------------------------------- */
+ 
 
   function storageAvailable() {
     try {
@@ -53,10 +28,7 @@
 
   var HAS_LS = storageAvailable();
 
-  /* ---------- one-time migration from the old tapid_* keys ----------
-     Earlier builds stored everything under "tapid_*". The keys are now
-     "tapx_*" (brand rename). Copy old data over so nothing the user
-     already saved is lost, then delete the legacy keys. */
+
   var LEGACY_KEYS = {
     tapid_profiles: 'tapx_profiles',
     tapid_views: 'tapx_views',
@@ -82,10 +54,6 @@
   }
   migrateLegacyKeys();
 
-  /* ---------- cleanup of stale demo leftovers ----------
-     The demo profile "zedrix" is now an official seeded demo account
-     (see seedDemo), so it is kept. Only fix settings that point at a
-     profile which no longer exists. */
   function fixBrokenActiveProfile() {
     if (!HAS_LS) return;
     try {
@@ -126,19 +94,15 @@
       window.localStorage.setItem(key, serialized);
       return true;
     } catch (e) {
-      /* quota exceeded or storage disabled — fall back to memory so the
-         current session keeps working, and report the problem. */
       memory[key] = serialized;
       return false;
     }
   }
 
-  /* ---------- validation ------------------------------------------- */
-
   var USERNAME_RE = /^[a-zA-Z0-9_-]{3,30}$/;
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-  /** Returns { valid:boolean, errors:{field:message} } for a profile. */
+ 
   function validateProfile(profile, options) {
     options = options || {};
     var errors = {};
@@ -180,13 +144,7 @@
     return { valid: Object.keys(errors).length === 0, errors: errors };
   }
 
-  /* ---------- social URL normalization ------------------------------ */
-  /**
-   * Users may type either a bare username ("juan") or a full URL
-   * ("https://instagram.com/juan"). Bare usernames are expanded with
-   * the service's canonical profile format. No API keys, no scraping —
-   * this only builds a link.
-   */
+
   var SOCIAL_RULES = {
     instagram: { host: 'https://instagram.com/', strip: /^@?/ },
     facebook: { host: 'https://facebook.com/', strip: /^@?/ },
@@ -218,7 +176,7 @@
     return out;
   }
 
-  /* ---------- profile CRUD ------------------------------------------ */
+
 
   function getAllProfiles() {
     var list = readRaw(KEYS.profiles, []);
@@ -241,13 +199,7 @@
     return found.length ? found[0] : null;
   }
 
-  /**
-   * Insert or update a profile.
-   * @param {object} profile
-   * @param {object} [options] { ignoreUsername: 'juan' } — used when a
-   *        user keeps their own username while editing.
-   * @returns {{ ok:boolean, profile?:object, errors?:object }}
-   */
+
   function saveProfile(profile, options) {
     options = options || {};
     var clean = normalizeSocials(sanitizeProfile(profile));
@@ -270,14 +222,12 @@
       }
     }
 
-    /* Editing a profile from the "My Profile" form does not touch the
-       production status — keep the customer's card state intact. */
+
     if (index >= 0 && !profile.cardStatus) {
       clean.cardStatus = list[index].cardStatus || 'draft';
     }
 
-    /* Same for the active switch: the edit forms never send it, so a
-       disabled card stays disabled until explicitly toggled back. */
+
     if (index >= 0 && profile.active === undefined) {
       clean.active = list[index].active !== false;
     }
@@ -308,14 +258,14 @@
     if (next.length === list.length) return false;
     writeRaw(KEYS.profiles, next);
 
-    /* remember the removal so seedDemo() never brings it back */
+  
     var removed = readRaw(KEYS.removed, []) || [];
     if (removed.indexOf(needle) === -1) {
       removed.push(needle);
       writeRaw(KEYS.removed, removed);
     }
 
-    /* drop the view counter of the deleted profile too */
+   
     var views = readRaw(KEYS.views, {}) || {};
     if (views.hasOwnProperty(needle)) {
       delete views[needle];
@@ -326,18 +276,18 @@
     return true;
   }
 
-  /** True when this username was deleted on purpose (do not re-seed). */
+
   function isRemoved(username) {
     var removed = readRaw(KEYS.removed, []) || [];
     return removed.indexOf(String(username || '').toLowerCase()) !== -1;
   }
 
-  /** Forget the removal list - used by "restore demo cards" / reset. */
+
   function clearRemoved() {
     writeRaw(KEYS.removed, []);
   }
 
-  /** Turn a card's public page on/off (cloud "active" switch). */
+
   function setProfileActive(username, active) {
     var profile = getProfile(username);
     if (!profile) return false;
@@ -345,10 +295,7 @@
       { ignoreUsername: profile.username }).ok;
   }
 
-  /**
-   * Keep only known fields and coerce every value to a short string.
-   * This is the XSS fence: nothing unknown ever reaches the DOM.
-   */
+
   function sanitizeProfile(input) {
     var FIELDS = [
       'username', 'fullName', 'title', 'bio', 'profileImage',
@@ -361,23 +308,14 @@
     FIELDS.forEach(function (field) {
       var value = input && input[field] !== undefined ? input[field] : '';
       value = String(value);
-      /* profileImage may be a base64 photo from the upload box - it is
-         re-encoded by the dashboard (canvas JPEG) before it gets here,
-         so it is capped generously instead of the 600-char text limit */
       var limit = field === 'profileImage' ? 400000 : 600;
       if (value.length > limit) value = value.slice(0, limit);
       out[field] = value.trim();
     });
-    /* Production card status can only be one of three states. */
     if (STATUSES.indexOf(out.cardStatus) === -1) out.cardStatus = 'draft';
-    /* Cloud switch: a disabled card shows the "inactive" screen.
-       Booleans only — the string fields above never receive it. */
     var active = input ? input.active : undefined;
     out.active = !(active === false || active === 'false' ||
       active === 0 || active === '0');
-    /* Images: http(s), relative asset paths, or an inline base64 photo
-       (data:image/...;base64, - never scriptable, browsers only decode
-       it as an image). Anything else is dropped. */
     if (!/^https?:\/\//i.test(out.profileImage) &&
         !/^\.?\//.test(out.profileImage) &&
         !/^data:image\/(jpeg|jpg|png|webp|gif);base64,/i.test(out.profileImage) &&
@@ -387,7 +325,6 @@
     return out;
   }
 
-  /* ---------- profile view analytics (placeholder for real analytics) */
 
   function getViews(username) {
     var all = readRaw(KEYS.views, {});
@@ -413,7 +350,7 @@
     return all[key];
   }
 
-  /* ---------- app settings (theme, current user, options) ----------- */
+
 
   function getSettings() {
     return readRaw(KEYS.settings, {}) || {};
@@ -425,100 +362,7 @@
     return next;
   }
 
-  /* ---------- starter data ------------------------------------------ */
-  /**
-   * Runs once so the very first launch has something to show:
-   * - the demo account you edit in the dashboard (Juan Delacruz)
-   * - two customer cards, so the "My Cards" production list is realistic
-   *     (you are the only person using the website, but you print PVC
-   *      cards for other people — each customer gets their own profile)
-   * Safe to re-run: profileExists() prevents duplicates.
-   */
-  function seedDemo() {
-    var demoProfiles = [
-      {
-        /* Official demo account — profile.html?user=zedrix */
-        username: 'zedrix',
-        fullName: 'Zedrix Reyes',
-        title: 'BSIT Student · TapX Demo',
-        bio: 'Demo TapX profile. One tap on the NFC card opens this page.',
-        profileImage: 'assets/default-avatar.png',
-        school: 'Northfield Institute of Technology',
-        course: 'Bachelor of Science in Information Technology',
-        yearLevel: '3rd Year',
-        email: 'zedrix@example.com',
-        phone: '+63 900 111 2222',
-        location: 'Manila, Philippines',
-        instagram: 'zedrix',
-        facebook: 'zedrix.reyes',
-        tiktok: '@zedrix',
-        messenger: 'zedrix.reyes',
-        linkedin: 'zedrix-reyes',
-        website: 'https://example.com/zedrix',
-        cardStatus: 'issued'
-      },
-      {
-        username: 'juan',
-        fullName: 'Juan Delacruz',
-        title: 'BSIT Student',
-        bio: 'Student developer interested in programming and technology.',
-        profileImage: 'assets/default-avatar.png',
-        school: 'Northfield Institute of Technology',
-        course: 'Bachelor of Science in Information Technology',
-        yearLevel: '3rd Year',
-        email: 'juan@example.com',
-        phone: '+63 900 000 0000',
-        location: 'Manila, Philippines',
-        instagram: 'juan.delacruz',
-        facebook: 'juan.delacruz',
-        tiktok: '@juan.delacruz',
-        messenger: 'juan.delacruz',
-        linkedin: 'juan-delacruz',
-        website: 'https://example.com',
-        portfolio: 'https://example.com/portfolio',
-        cardStatus: 'draft'
-      },
-      {
-        username: 'maria_santos',
-        fullName: 'Maria Santos',
-        title: 'Content Creator',
-        bio: 'Lifestyle creator sharing food, travel and daily vlogs.',
-        profileImage: 'assets/default-avatar.png',
-        school: 'San Ildefonso College',
-        course: 'Communication Arts',
-        yearLevel: 'Graduate',
-        email: 'maria@example.com',
-        phone: '+63 901 000 0000',
-        location: 'Cebu, Philippines',
-        instagram: 'maria.santos',
-        facebook: 'maria.santos',
-        tiktok: '@maria.santos',
-        messenger: 'maria.santos',
-        linkedin: 'maria-santos',
-        website: 'https://example.com/maria',
-        cardStatus: 'issued'
-      },
-      {
-        username: 'karl_mercado',
-        fullName: 'Karl Mercado',
-        title: 'Freelance Photographer',
-        bio: 'Event and portrait photographer available for bookings.',
-        profileImage: 'assets/default-avatar.png',
-        school: 'Baguio Creative Academy',
-        course: 'Fine Arts',
-        yearLevel: 'Graduate',
-        email: 'karl@example.com',
-        phone: '+63 902 000 0000',
-        location: 'Baguio, Philippines',
-        instagram: 'karl.shoots',
-        facebook: 'karl.mercado',
-        tiktok: '@karl.shoots',
-        messenger: 'karl.mercado',
-        linkedin: 'karl-mercado',
-        website: 'https://example.com/karl',
-        cardStatus: 'printed'
-      }
-    ];
+
 
     demoProfiles.forEach(function (profile) {
       /* never resurrect a card the user deleted on purpose */
@@ -532,7 +376,6 @@
     return getProfile('juan');
   }
 
-  /* ---------- expose ------------------------------------------------- */
   window.TapXStorage = {
     isPersistent: HAS_LS,
     validateProfile: validateProfile,
