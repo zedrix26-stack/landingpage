@@ -1,25 +1,10 @@
-/**
- * TapX — cloud.js
- * ------------------------------------------------------------------
- * Public Supabase (PostgREST) access for the profile page.
- *
- * Only the anon key lives here — it is safe to ship: read access is
- * public, every write is gated by the x-tapx-key header whose value
- * lives in cloud-key.js (dashboard only, never published).
- *
- * Network rules:
- *  - never fetches from file:// (double-clicked prototype stays offline)
- *  - never fetches from localhost test servers (tests stay hermetic)
- *  - 8s timeout, resolves { ok, row } — never rejects
- * ------------------------------------------------------------------
- */
 (function () {
   'use strict';
 
   var C = {
     url: 'https://exinjftiirunoscwxlmc.supabase.co',
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4aW5qZnRpaXJ1bm9zY3d4bG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzNjMyMzQsImV4cCI6MjEwNjkzOTIzNH0.-GvgN2iFZZlfNKbx_rZ8SzCueQveqTCwwoxRFdAYUAs',
-    writeKey: '',           /* filled by cloud-key.js on the dashboard */
+    writeKey: '',         
     timeout: 8000
   };
 
@@ -27,7 +12,6 @@
     return !!(C.url && C.anonKey);
   }
 
-  /** True when a real browser can talk to the database safely. */
   function isReady() {
     if (!isConfigured()) return false;
     if (typeof window.fetch !== 'function') return false;
@@ -61,7 +45,7 @@
         return res;
       }, function () {
         clearTimeout(timer);
-        return null;                  /* offline / aborted / CORS — no throw */
+        return null;                
       }).then(function (res) {
         if (!res) { resolve({ ok: false, status: 0 }); return; }
         res.json().then(function (body) {
@@ -73,11 +57,6 @@
     });
   }
 
-  /**
-   * Fetch one profile row.
-   * Resolves { ok: true, row: object|null } when the database answered,
-   * { ok: false } when it could not be reached.
-   */
   function fetchProfile(username) {
     if (!isReady() || !username) {
       return Promise.resolve({ ok: true, row: null, local: true });
@@ -92,10 +71,7 @@
     });
   }
 
-  /**
-   * Upsert every local card (used by the dashboard "Sync" button).
-   * Resolves { ok, inserted, error }.
-   */
+
   function syncProfiles(rows) {
     if (!isReady()) return Promise.resolve({ ok: false, error: 'not-ready' });
     if (!C.writeKey) return Promise.resolve({ ok: false, error: 'no-key' });
